@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 小說素材庫</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #a78bfa;
+            --accent: #f472b6;
+            --bg-dark: #0f172a;
+            --bg-light: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 登入頁面 */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-box h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: white;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 導航欄 */
+        .navbar {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-item:hover::before {
+            left: 100%;
+        }
+
+        .nav-item:hover {
+            background: rgba(99, 102, 241, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+        }
+
+        /* 主容器 */
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* 頁面標題 */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 卡片樣式 */
+        .card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            border-color: var(--primary);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        /* 標籤 */
+        .tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--secondary);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            transition: all 0.3s;
+        }
+
+        .tag:hover {
+            background: rgba(99, 102, 241, 0.3);
+            transform: scale(1.05);
+        }
+
+        .tag.tag-hero { background: rgba(16, 185, 129, 0.2); color: #10b981; border-color: rgba(16, 185, 129, 0.3); }
+        .tag.tag-villain { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
+        .tag.tag-support { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border-color: rgba(245, 158, 11, 0.3); }
+
+        /* 按鈕 */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, var(--danger), #dc2626);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        /* 表單 */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            background: rgba(15, 23, 42, 0.5);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* 搜尋欄 */
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* 統計資訊 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(167, 139, 250, 0.1));
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* 編輯頁面 */
+        .edit-page {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .edit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        /* AI助手 */
+        .ai-assistant {
+            background: linear-gradient(135deg, rgba(244, 114, 182, 0.1), rgba(99, 102, 241, 0.1));
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(244, 114, 182, 0.3);
+        }
+
+        .material-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .material-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .material-item:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .material-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* 動畫 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(15, 23, 42, 0.95);
+                backdrop-filter: blur(10px);
+                padding: 1rem;
+                display: flex;
+                justify-content: space-around;
+                box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.3);
+            }
+
+            .nav-container {
+                padding: 0;
+            }
+
+            .main-container {
+                padding: 0 1rem;
+                margin-bottom: 5rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 載入動畫 */
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 警告提示 */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.5);
+            color: var(--warning);
+        }
+
+        /* 秘密設定的特殊樣式 */
+        .secret-warning {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(245, 158, 11, 0.1));
+            border: 2px solid rgba(239, 68, 68, 0.5);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* 多選下拉框 */
+        .multi-select {
+            position: relative;
+        }
+
+        .multi-select-input {
+            cursor: pointer;
+            background: rgba(15, 23, 42, 0.5);
+            border: 2px solid var(--border);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            color: var(--text-primary);
+            width: 100%;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .multi-select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+
+        .multi-select-dropdown.show {
+            display: block;
+        }
+
+        .multi-select-option {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .multi-select-option:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .multi-select-option input {
+            cursor: pointer;
+        }
+
+        /* 快速分類助手 */
+        .quick-classifier {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(99, 102, 241, 0.1));
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .content-preview {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            max-height: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .content-preview::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(transparent, rgba(15, 23, 42, 0.5));
+        }
+
+        .ai-suggestion {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* 彩色圖標 */
+        .icon-character { color: #f472b6; }
+        .icon-background { color: #60a5fa; }
+        .icon-secret { color: #fb923c; }
+        .icon-novel { color: #a78bfa; }
+        .icon-ai { color: #34d399; }
+    </style>
+</head>
+<body>
+    <!-- 登入頁面 -->
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <h1>📚 小說素材庫</h1>
+            <input type="password" class="password-input" id="passwordInput" placeholder="請輸入密碼" onkeypress="if(event.key==='Enter') login()">
+            <button class="login-btn" onclick="login()">進入系統</button>
+        </div>
+    </div>
+
+    <!-- 主應用 -->
+    <div id="app" style="display: none;">
+        <!-- 導航欄 -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">📚 小說素材庫</div>
+                <div class="nav-menu">
+                    <div class="nav-item" onclick="showPage('dashboard')">📊 總覽</div>
+                    <div class="nav-item" onclick="showPage('characters')">👤 角色</div>
+                    <div class="nav-item" onclick="showPage('backgrounds')">🌍 背景</div>
+                    <div class="nav-item" onclick="showPage('secrets')">🔐 秘密</div>
+                    <div class="nav-item" onclick="showPage('novels')">📖 小說</div>
+                    <div class="nav-item" onclick="showPage('ai')">🤖 AI助手</div>
+                    <div class="nav-item" onclick="showPage('settings')">⚙️ 設定</div>
+                    <div class="nav-item" onclick="logout()">🚪 登出</div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 主內容區 -->
+        <div class="main-container">
+            <div id="pageContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // 資料結構
+        let data = {
+            characters: [],
+            backgrounds: [],
+            secrets: [],
+            novels: [],
+            settings: {
+                password: 'admin',
+                autoBackup: true,
+                googleDriveToken: null
+            }
+        };
+
+        // 初始化
+        window.onload = function() {
+            loadData();
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                showPage('dashboard');
+            }
+        };
+
+        // 登入功能
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === data.settings.password) {
+                localStorage.setItem('isLoggedIn', 'true');
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                showPage('dashboard');
+            } else {
+                alert('密碼錯誤！');
+            }
+        }
+
+        // 登出功能
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            location.reload();
+        }
+
+        // 資料存取
+        function loadData() {
+            const saved = localStorage.getItem('novelMaterialData');
+            if (saved) {
+                data = JSON.parse(saved);
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('novelMaterialData', JSON.stringify(data));
+            if (data.settings.autoBackup) {
+                // 這裡可以加入 Google Drive 自動備份
+            }
+        }
+
+        // 頁面路由
+        function showPage(page) {
+            // 更新導航欄
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // 顯示對應頁面
+            const content = document.getElementById('pageContent');
+            content.classList.remove('fade-in');
+            
+            setTimeout(() => {
+                switch(page) {
+                    case 'dashboard':
+                        showDashboard();
+                        break;
+                    case 'characters':
+                        showCharacters();
+                        break;
+                    case 'backgrounds':
+                        showBackgrounds();
+                        break;
+                    case 'secrets':
+                        showSecrets();
+                        break;
+                    case 'novels':
+                        showNovels();
+                        break;
+                    case 'ai':
+                        showAI();
+                        break;
+                    case 'settings':
+                        showSettings();
+                        break;
+                }
+                content.classList.add('fade-in');
+            }, 100);
+        }
+
+        // 總覽頁面
+        function showDashboard() {
+            const totalWords = calculateTotalWords();
+            const recentItems = getRecentItems();
+            
+            document.getElementById('pageContent').innerHTML = `
+                <div class="page-header">
+                    <h1 class="page-title">📊 總覽</h1>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">${data.characters.length}</div>
+                        <div class="stat-label">角色總數</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${data.backgrounds.length}</div>
+                        <div class="stat-label">背景設定</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${data.secrets.length}</div>
+                        <div class="stat-label">秘密設定</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${data.novels.length}</div>
+                        <div class="stat-label">AI小說</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${totalWords}</div>
+                        <div class="stat-label">總字數</div>
+                    </div>
+                </div>
+
+                <h2 style="margin: 2rem 0 1rem;">🕐 最近更新</h2>
+                <div id="recentItems">
+                    ${recentItems.map(item => `
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">${item.icon} ${item.title}</div>
+                                    <div class="card-meta">
+                                        <span class="tag">${item.type}</span>
+                                        <span style="color: var(--text-secondary); font-size: 0.875rem;">
+                                            ${new Date(item.updatedAt).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="quick-classifier">
+                    <h3 style="margin-bottom: 1rem;">⚡ 快速分類助手</h3>
+                    <div class="content-preview">
+                        <textarea id="quickContent" class="form-textarea" placeholder="貼上或輸入內容..." style="min-height: 80px;"></textarea>
+                    </div>
+                    <div class="ai-suggestion" id="aiSuggestion" style="display: none;">
+                        🤖 系統建議：<span id="suggestionText"></span>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="btn btn-secondary" onclick="quickClassify('character')">👤 存為角色</button>
+                        <button class="btn btn-secondary" onclick="quickClassify('background')">🌍 存為背景</button>
+                        <button class="btn btn-secondary" onclick="quickClassify('novel')">📖 存為小說</button>
+                        <button class="btn btn-primary" onclick="autoClassify()">🤖 智能分類</button>
+                    </div>
+                </div>
+            `;
+
+            // 監聽快速輸入框
+            document.getElementById('quickContent').addEventListener('input', (e) => {
+                if (e.target.value.length > 10) {
+                    suggestClassification(e.target.value);
+                }
+            });
+        }
+
+        // 角色頁面
+        function showCharacters() {
+            document.getElementById('pageContent').innerHTML = `
+                <div class="page-header">
+                    <h1 class="page-title">👤 角色設定</h1>
+                    <button class="btn btn-primary" onclick="editCharacter()">
+                        <span>➕</span> 新增角色
+                    </button>
+                </div>
+
+                <div class="search-bar">
+                    <input type="text" class="form-input search-input" placeholder="搜尋角色..." onkeyup="searchCharacters(this.value)">
+                    <select class="form-select" style="width: 200px;" onchange="filterByTag(this.value, 'characters')">
+                        <option value="">所有標籤</option>
+                        <option value="主角">主角</option>
+                        <option value="配角">配角</option>
+                        <option value="反派">反派</option>
+                    </select>
+                </div>
+
+                <div id="charactersList">
+                    ${renderCharacters(data.characters)}
+                </div>
+            `;
+        }
+
+        // 渲染角色列表
+        function renderCharacters(characters) {
+            if (characters.length === 0) {
+                return '<p style="text-align: center; color: var(--text-secondary);">還沒有角色，點擊上方按鈕新增第一個角色！</p>';
+            }
+
+            return characters.map(char => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${char.name}</div>
+                            <div class="card-meta">
+                                ${char.tags.map(tag => `<span class="tag tag-${tag === '主角' ? 'hero' : tag === '反派' ? 'villain' : 'support'}">${tag}</span>`).join('')}
+                                <span style="color: var(--text-secondary);">年齡: ${char.age || '未知'}</span>
+                                <span style="color: var(--text-secondary);">種族: ${char.race || '人類'}</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-secondary" onclick="editCharacter('${char.id}')">編輯</button>
+                            <button class="btn btn-danger" onclick="deleteItem('characters', '${char.id}')">刪除</button>
+                        </div>
+                    </div>
+                    <div style="color: var(--text-secondary); margin-top: 0.5rem;">
+                        ${char.description ? char.description.substring(0, 100) + '...' : '沒有描述'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 編輯角色
+        function editCharacter(id = null) {
+            const character = id ? data.characters.find(c => c.id === id) : {
+                id: generateId(),
+                name: '',
+                age: '',
+                appearance: { hair: '', eyes: '' },
+                race: '',
+                personality: '',
+                background: '',
+                notes: '',
+                tags: [],
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+
+            document.getElementById('pageContent').innerHTML = `
+                <div class="edit-page">
+                    <div class="edit-header">
+                        <h1 class="page-title">${id ? '編輯' : '新增'}角色</h1>
+                        <button class="btn btn-secondary" onclick="showCharacters()">返回</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">角色名稱 *</label>
+                        <input type="text" class="form-input" id="charName" value="${character.name}" placeholder="輸入角色名稱">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">年齡</label>
+                            <input type="text" class="form-input" id="charAge" value="${character.age}" placeholder="例如: 25">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">種族</label>
+                            <input type="text" class="form-input" id="charRace" value="${character.race}" placeholder="例如: 人類、精靈">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">髮色</label>
+                            <select class="form-select" id="charHair">
+                                <option value="">請選擇</option>
+                                <option value="黑色" ${character.appearance.hair === '黑色' ? 'selected' : ''}>黑色</option>
+                                <option value="棕色" ${character.appearance.hair === '棕色' ? 'selected' : ''}>棕色</option>
+                                <option value="金色" ${character.appearance.hair === '金色' ? 'selected' : ''}>金色</option>
+                                <option value="紅色" ${character.appearance.hair === '紅色' ? 'selected' : ''}>紅色</option>
+                                <option value="白色" ${character.appearance.hair === '白色' ? 'selected' : ''}>白色</option>
+                                <option value="藍色" ${character.appearance.hair === '藍色' ? 'selected' : ''}>藍色</option>
+                                <option value="綠色" ${character.appearance.hair === '綠色' ? 'selected' : ''}>綠色</option>
+                                <option value="紫色" ${character.appearance.hair === '紫色' ? 'selected' : ''}>紫色</option>
+                                <option value="其他" ${character.appearance.hair === '其他' ? 'selected' : ''}>其他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">眼色</label>
+                            <select class="form-select" id="charEyes">
+                                <option value="">請選擇</option>
+                                <option value="黑色" ${character.appearance.eyes === '黑色' ? 'selected' : ''}>黑色</option>
+                                <option value="棕色" ${character.appearance.eyes === '棕色' ? 'selected' : ''}>棕色</option>
+                                <option value="藍色" ${character.appearance.eyes === '藍色' ? 'selected' : ''}>藍色</option>
+                                <option value="綠色" ${character.appearance.eyes === '綠色' ? 'selected' : ''}>綠色</option>
+                                <option value="灰色" ${character.appearance.eyes === '灰色' ? 'selected' : ''}>灰色</option>
+                                <option value="紅色" ${character.appearance.eyes === '紅色' ? 'selected' : ''}>紅色</option>
+                                <option value="紫色" ${character.appearance.eyes === '紫色' ? 'selected' : ''}>紫色</option>
+                                <option value="異色瞳" ${character.appearance.eyes === '異色瞳' ? 'selected' : ''}>異色瞳</option>
+                                <option value="其他" ${character.appearance.eyes === '其他' ? 'selected' : ''}>其他</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">外貌描述</label>
+                        <textarea class="form-textarea" id="charDescription" placeholder="詳細描述角色的外貌特徵...">${character.description || ''}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">性格特質</label>
+                        <textarea class="form-textarea" id="charPersonality" placeholder="描述角色的性格、習慣、喜好等...">${character.personality}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">背景故事</label>
+                        <textarea class="form-textarea" id="charBackground" placeholder="角色的過去、經歷、動機等..." style="min-height: 150px;">${character.background}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">額外備註</label>
+                        <textarea class="form-textarea" id="charNotes" placeholder="其他重要資訊...">${character.notes}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">標籤</label>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <label><input type="checkbox" id="tag-hero" ${character.tags.includes('主角') ? 'checked' : ''}> 主角</label>
+                            <label><input type="checkbox" id="tag-support" ${character.tags.includes('配角') ? 'checked' : ''}> 配角</label>
+                            <label><input type="checkbox" id="tag-villain" ${character.tags.includes('反派') ? 'checked' : ''}> 反派</label>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <button class="btn btn-secondary" onclick="showCharacters()">取消</button>
+                        <button class="btn btn-primary" onclick="saveCharacter('${character.id}', ${!!id})">
+                            <span>💾</span> 儲存
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 儲存角色
+        function saveCharacter(id, isEdit) {
+            const character = {
+                id: id,
+                name: document.getElementById('charName').value,
+                age: document.getElementById('charAge').value,
+                appearance: {
+                    hair: document.getElementById('charHair').value,
+                    eyes: document.getElementById('charEyes').value
+                },
+                race: document.getElementById('charRace').value,
+                description: document.getElementById('charDescription').value,
+                personality: document.getElementById('charPersonality').value,
+                background: document.getElementById('charBackground').value,
+                notes: document.getElementById('charNotes').value,
+                tags: [],
+                updatedAt: Date.now()
+            };
+
+            if (!character.name) {
+                alert('請輸入角色名稱！');
+                return;
+            }
+
+            // 收集標籤
+            if (document.getElementById('tag-hero').checked) character.tags.push('主角');
+            if (document.getElementById('tag-support').checked) character.tags.push('配角');
+            if (document.getElementById('tag-villain').checked) character.tags.push('反派');
+
+            if (isEdit) {
+                const index = data.characters.findIndex(c => c.id === id);
+                character.createdAt = data.characters[index].createdAt;
+                data.characters[index] = character;
+            } else {
+                character.createdAt = Date.now();
+                data.characters.push(character);
+            }
+
+            saveData();
+            showCharacters();
+        }
+
+        // 背景頁面
+        function showBackgrounds() {
+            document.getElementById('pageContent').innerHTML = `
+                <div class="page-header">
+                    <h1 class="page-title">🌍 故事背景</h1>
+                    <button class="btn btn-primary" onclick="editBackground()">
+                        <span>➕</span> 新增背景
+                    </button>
+                </div>
+
+                <div class="search-bar">
+                    <input type="text" class="form-input search-input" placeholder="搜尋背景..." onkeyup="searchBackgrounds(this.value)">
+                    <select class="form-select" style="width: 200px;" onchange="filterByType(this.value, 'backgrounds')">
+                        <option value="">所有類型</option>
+                        <option value="地點">地點</option>
+                        <option value="時代">時代</option>
+                        <option value="世界觀">世界觀</option>
+                        <option value="文化">文化</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+
+                <div id="backgroundsList">
+                    ${renderBackgrounds(data.backgrounds)}
+                </div>
+            `;
+        }
+
+        // 渲染背景列表
+        function renderBackgrounds(backgrounds) {
+            if (backgrounds.length === 0) {
+                return '<p style="text-align: center; color: var(--text-secondary);">還沒有背景設定，點擊上方按鈕新增！</p>';
+            }
+
+            return backgrounds.map(bg => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${bg.name}</div>
+                            <div class="card-meta">
+                                <span class="tag">${bg.type}</span>
+                                ${bg.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-secondary" onclick="editBackground('${bg.id}')">編輯</button>
+                            <button class="btn btn-danger" onclick="deleteItem('backgrounds', '${bg.id}')">刪除</button>
+                        </div>
+                    </div>
+                    <div style="color: var(--text-secondary); margin-top: 0.5rem;">
+                        ${bg.description ? bg.description.substring(0, 150) + '...' : '沒有描述'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 編輯背景
+        function editBackground(id = null) {
+            const background = id ? data.backgrounds.find(b => b.id === id) : {
+                id: generateId(),
+                name: '',
+                type: '地點',
+                description: '',
+                rules: '',
+                notes: '',
+                tags: [],
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+
+            document.getElementById('pageContent').innerHTML = `
+                <div class="edit-page">
+                    <div class="edit-header">
+                        <h1 class="page-title">${id ? '編輯' : '新增'}背景</h1>
+                        <button class="btn btn-secondary" onclick="showBackgrounds()">返回</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">場景名稱 *</label>
+                        <input type="text" class="form-input" id="bgName" value="${background.name}" placeholder="輸入場景名稱">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">類型</label>
+                        <select class="form-select" id="bgType">
+                            <option value="地點" ${background.type === '地點' ? 'selected' : ''}>地點</option>
+                            <option value="時代" ${background.type === '時代' ? 'selected' : ''}>時代</option>
+                            <option value="世界觀" ${background.type === '世界觀' ? 'selected' : ''}>世界觀</option>
+                            <option value="文化" ${background.type === '文化' ? 'selected' : ''}>文化</option>
+                            <option value="其他" ${background.type === '其他' ? 'selected' : ''}>其他</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">詳細描述</label>
+                        <textarea class="form-textarea" id="bgDescription" placeholder="描述這個場景的細節..." style="min-height: 200px;">${background.description}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">規則/法則</label>
+                        <textarea class="form-textarea" id="bgRules" placeholder="這個世界的特殊規則或法則...">${background.rules}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">備註</label>
+                        <textarea class="form-textarea" id="bgNotes" placeholder="其他注意事項...">${background.notes}</textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <button class="btn btn-secondary" onclick="showBackgrounds()">取消</button>
+                        <button class="btn btn-primary" onclick="saveBackground('${background.id}', ${!!id})">
+                            <span>💾</span> 儲存
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 儲存背景
+        function saveBackground(id, isEdit) {
+            const background = {
+                id: id,
+                name: document.getElementById('bgName').value,
+                type: document.getElementById('bgType').value,
+                description: document.getElementById('bgDescription').value,
+                rules: document.getElementById('bgRules').value,
+                notes: document.getElementById('bgNotes').value,
+                tags: [],
+                updatedAt: Date.now()
+            };
+
+            if (!background.name) {
+                alert('請輸入場景名稱！');
+                return;
+            }
+
+            if (isEdit) {
+                const index = data.backgrounds.findIndex(b => b.id === id);
+                background.createdAt = data.backgrounds[index].createdAt;
+                data.backgrounds[index] = background;
+            } else {
+                background.createdAt = Date.now();
+                data.backgrounds.push(background);
+            }
+
+            saveData();
+            showBackgrounds();
+        }
+
+        // 秘密設定頁面
+        function showSecrets() {
+            document.getElementById('pageContent').innerHTML = `
+                <div class="page-header">
+                    <h1 class="page-title">🔐 秘密設定</h1>
+                    <button class="btn btn-primary" onclick="editSecret()">
+                        <span>➕</span> 新增秘密
+                    </button>
+                </div>
+
+                <div class="secret-warning">
+                    ⚠️ 注意：此區域包含劇透內容，請謹慎查看！
+                </div>
+
+                <div class="search-bar">
+                    <input type="text" class="form-input search-input" placeholder="搜尋秘密..." onkeyup="searchSecrets(this.value)">
+                    <select class="form-select" style="width: 200px;" onchange="filterByCategory(this.value, 'secrets')">
+                        <option value="">所有類別</option>
+                        <option value="劇情轉折">劇情轉折</option>
+                        <option value="角色秘密">角色秘密</option>
+                        <option value="世界設定">世界設定</option>
+                        <option value="伏筆">伏筆</option>
+                        <option value="結局">結局</option>
+                    </select>
+                </div>
+
+                <div id="secretsList">
+                    ${renderSecrets(data.secrets)}
+                </div>
+            `;
+        }
+
+        // 渲染秘密列表
+        function renderSecrets(secrets) {
+            if (secrets.length === 0) {
+                return '<p style="text-align: center; color: var(--text-secondary);">還沒有秘密設定，點擊上方按鈕新增！</p>';
+            }
+
+            return secrets.map(secret => `
+                <div class="card" style="border-color: rgba(239, 68, 68, 0.3);">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">🔒 ${secret.title}</div>
+                            <div class="card-meta">
+                                <span class="tag tag-villain">${secret.category}</span>
+                                ${secret.knownBy && secret.knownBy.length > 0 ? 
+                                    `<span class="tag">知情者: ${secret.knownBy.length}人</span>` : 
+                                    '<span class="tag">無人知曉</span>'
+                                }
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-secondary" onclick="editSecret('${secret.id}')">編輯</button>
+                            <button class="btn btn-danger" onclick="deleteItem('secrets', '${secret.id}')">刪除</button>
+                        </div>
+                    </div>
+                    <details style="margin-top: 1rem;">
+                        <summary style="cursor: pointer; color: var(--warning);">⚠️ 點擊查看秘密內容</summary>
+                        <div style="margin-top: 1rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-radius: 8px;">
+                            <p>${secret.content}</p>
+                            ${secret.impact ? `<p style="margin-top: 0.5rem;"><strong>影響：</strong>${secret.impact}</p>` : ''}
+                            ${secret.knownBy && secret.knownBy.length > 0 ? 
+                                `<p style="margin-top: 0.5rem;"><strong>知情者：</strong>${secret.knownBy.join('、')}</p>` : ''
+                            }
+                        </div>
+                    </details>
+                </div>
+            `).join('');
+        }
+
+        // 編輯秘密
+        function editSecret(id = null) {
+            const secret = id ? data.secrets.find(s => s.id === id) : {
+                id: generateId(),
+                title: '',
+                category: '劇情轉折',
+                content: '',
+                impact: '',
+                knownBy: [],
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+
+            document.getElementById('pageContent').innerHTML = `
+                <div class="edit-page">
+                    <div class="edit-header">
+                        <h1 class="page-title">${id ? '編輯' : '新增'}秘密</h1>
+                        <button class="btn btn-secondary" onclick="showSecrets()">返回</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">標題 *</label>
+                        <input type="text" class="form-input" id="secretTitle" value="${secret.title}" placeholder="簡短描述這個秘密">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">類別</label>
+                        <select class="form-select" id="secretCategory">
+                            <option value="劇情轉折" ${secret.category === '劇情轉折' ? 'selected' : ''}>劇情轉折</option>
+                            <option value="角色秘密" ${secret.category === '角色秘密' ? 'selected' : ''}>角色秘密</option>
+                            <option value="世界設定" ${secret.category === '世界設定' ? 'selected' : ''}>世界設定</option>
+                            <option value="伏筆" ${secret.category === '伏筆' ? 'selected' : ''}>伏筆</option>
+                            <option value="結局" ${secret.category === '結局' ? 'selected' : ''}>結局</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">內容</label>
+                        <textarea class="form-textarea" id="secretContent" placeholder="詳細描述這個秘密..." style="min-height: 200px;">${secret.content}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">影響/重要性</label>
+                        <textarea class="form-textarea" id="secretImpact" placeholder="這個秘密會如何影響故事...">${secret.impact}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">知情人員</label>
+                        <div class="multi-select">
+                            <div class="multi-select-input" onclick="toggleMultiSelect()">
+                                <span id="selectedKnownBy">${secret.knownBy.length > 0 ? secret.knownBy.join('、') : '選擇知情者'}</span>
+                                <span>▼</span>
+                            </div>
+                            <div class="multi-select-dropdown" id="knownByDropdown">
+                                ${data.characters.map(char => `
+                                    <div class="multi-select-option">
+                                        <input type="checkbox" id="known-${char.id}" value="${char.name}" 
+                                            ${secret.knownBy.includes(char.name) ? 'checked' : ''} 
+                                            onchange="updateKnownBy()">
+                                        <label for="known-${char.id}">${char.name}</label>
+                                    </div>
+                                `).join('')}
+                                <div style="padding: 0.5rem 1rem;">
+                                    <input type="text" class="form-input" id="customKnownBy" 
+                                        placeholder="輸入其他知情者（按Enter添加）" 
+                                        onkeypress="if(event.key==='Enter') addCustomKnownBy()">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="customKnownByList" style="margin-top: 0.5rem;">
+                            ${secret.knownBy.filter(name => !data.characters.some(c => c.name === name))
+                                .map(name => `<span class="tag">${name} <span onclick="removeCustomKnownBy('${name}')" style="cursor: pointer;">×</span></span>`).join('')}
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <button class="btn btn-secondary" onclick="showSecrets()">取消</button>
+                        <button class="btn btn-primary" onclick="saveSecret('${secret.id}', ${!!id})">
+                            <span>💾</span> 儲存
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 切換多選下拉框
+        function toggleMultiSelect() {
+            const dropdown = document.getElementById('knownByDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // 更新知情者
+        function updateKnownBy() {
+            const checkboxes = document.querySelectorAll('#knownByDropdown input[type="checkbox"]:checked');
+            const selected = Array.from(checkboxes).map(cb => cb.value);
+            const custom = Array.from(document.querySelectorAll('#customKnownByList .tag')).map(tag => tag.textContent.replace(' ×', ''));
+            const all = [...selected, ...custom];
+            document.getElementById('selectedKnownBy').textContent = all.length > 0 ? all.join('、') : '選擇知情者';
+        }
+
+        // 添加自定義知情者
+        function addCustomKnownBy() {
+            const input = document.getElementById('customKnownBy');
+            const value = input.value.trim();
+            if (value) {
+                const customList = document.getElementById('customKnownByList');
+                customList.innerHTML += `<span class="tag">${value} <span onclick="removeCustomKnownBy('${value}')" style="cursor: pointer;">×</span></span>`;
+                input.value = '';
+                updateKnownBy();
+            }
+        }
+
+        // 移除自定義知情者
+        function removeCustomKnownBy(name) {
+            const customList = document.getElementById('customKnownByList');
+            const tags = Array.from(customList.querySelectorAll('.tag'));
+            tags.forEach(tag => {
+                if (tag.textContent.replace(' ×', '') === name) {
+                    tag.remove();
+                }
+            });
+            updateKnownBy();
+        }
+
+        // 儲存秘密
+        function saveSecret(id, isEdit) {
+            const checkboxes = document.querySelectorAll('#knownByDropdown input[type="checkbox"]:checked');
+            const selected = Array.from(checkboxes).map(cb => cb.value);
+            const custom = Array.from(document.querySelectorAll('#customKnownByList .tag')).map(tag => tag.textContent.replace(' ×', ''));
+            
+            const secret = {
+                id: id,
+                title: document.getElementById('secretTitle').value,
+                category: document.getElementById('secretCategory').value,
+                content: document.getElementById('secretContent').value,
+                impact: document.getElementById('secretImpact').value,
+                knownBy: [...selected, ...custom],
+                updatedAt: Date.now()
+            };
+
+            if (!secret.title) {
+                alert('請輸入標題！');
+                return;
+            }
+
+            if (isEdit) {
+                const index = data.secrets.findIndex(s => s.id === id);
+                secret.createdAt = data.secrets[index].createdAt;
+                data.secrets[index] = secret;
+            } else {
+                secret.createdAt = Date.now();
+                data.secrets.push(secret);
+            }
+
+            saveData();
+            showSecrets();
+        }
+
+        // AI小說頁面
+        function showNovels() {
+            document.getElementById('pageContent').innerHTML = `
+                <div class="page-header">
+                    <h1 class="page-title">📖 AI小說</h1>
+                    <button class="btn btn-primary" onclick="editNovel()">
+                        <span>➕</span> 新增小說
+                    </button>
+                </div>
+
+                <div class="search-bar">
+                    <input type="text" class="form-input search-input" placeholder="搜尋小說..." onkeyup="searchNovels(this.value)">
+                </div>
+
+                <div id="novelsList">
+                    ${renderNovels(data.novels)}
+                </div>
+            `;
+        }
+
+        // 渲染小說列表
+        function renderNovels(novels) {
+            if (novels.length === 0) {
+                return '<p style="text-align: center; color: var(--text-secondary);">還沒有AI小說，點擊上方按鈕新增！</p>';
+            }
+
+            return novels.map(novel => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${novel.title}</div>
+                            <div class="card-meta">
+                                <span class="tag">字數: ${novel.content.length}</span>
+                                <span style="color: var(--text-secondary); font-size: 0.875rem;">
+                                    ${new Date(novel.createdAt).toLocaleDateString()}
+                                </span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-secondary" onclick="viewNovel('${novel.id}')">查看</button>
+                            <button class="btn btn-secondary" onclick="editNovel('${novel.id}')">編輯</button>
+                            <button class="btn btn-danger" onclick="deleteItem('novels', '${novel.id}')">刪除</button>
+                        </div>
+                    </div>
+                    <div style="color: var(--text-secondary); margin-top: 0.5rem;">
+                        ${novel.content.substring(0, 150)}...
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 查看小說
+        function viewNovel(id) {
+            const novel = data.novels.find(n => n.id === id);
+            if (!novel) return;
+
+            document.getElementById('pageContent').innerHTML = `
+                <div class="edit-page">
+                    <div class="edit-header">
+                        <h1 class="page-title">${novel.title}</h1>
+                        <button class="btn btn-secondary" onclick="showNovels()">返回</button>
+                    </div>
+
+                    <div class="card" style="background: rgba(99, 102, 241, 0.1);">
+                        <h3>使用的提示詞</h3>
+                        <p style="margin-top: 0.5rem; white-space: pre-wrap;">${novel.prompt || '無'}</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>小說內容</h3>
+                        <div style="margin-top: 1rem; white-space: pre-wrap; line-height: 1.8;">${novel.content}</div>
+                    </div>
+
+                    ${novel.notes ? `
+                        <div class="card">
+                            <h3>備註/評價</h3>
+                            <p style="margin-top: 0.5rem;">${novel.notes}</p>
+                        </div>
+                    ` : ''}
+
+                    ${novel.relatedMaterials && novel.relatedMaterials.length > 0 ? `
+                        <div class="card">
+                            <h3>相關素材</h3>
+                            <div class="card-meta" style="margin-top: 0.5rem;">
+                                ${novel.relatedMaterials.map(material => `<span class="tag">${material}</span>`).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // 編輯小說
+        function editNovel(id = null) {
+            const novel = id ? data.novels.find(n => n.id === id) : {
+                id: generateId(),
+                title: '',
+                prompt: '',
+                content: '',
+                notes: '',
+                relatedMaterials: [],
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+
+            document.getElementById('pageContent').innerHTML = `
+                <div class="edit-page">
+                    <div class="edit-header">
+                        <h1 class="page-title">${id ? '編輯' : '新增'}小說</h1>
+                        <button class="btn btn-secondary" onclick="showNovels()">返回</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">標題 *</label>
+                        <input type="text" class="form-input" id="novelTitle" value="${novel.title}" placeholder="輸入小說標題">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">使用的提示詞</label>
+                        <textarea class="form-textarea" id="novelPrompt" placeholder="記錄使用的AI提示詞..." style="min-height: 100px;">${novel.prompt}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">小說內容</label>
+                        <textarea class="form-textarea" id="novelContent" placeholder="貼上或輸入小說內容..." style="min-height: 400px;">${novel.content}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">備註/評價</label>
+                        <textarea class="form-textarea" id="novelNotes" placeholder="對這個作品的想法...">${novel.notes}</textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <button class="btn btn-secondary" onclick="showNovels()">取消</button>
+                        <button class="btn btn-primary" onclick="saveNovel('${novel.id}', ${!!id})">
+                            <span>💾</span> 儲存
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 儲存小說
+        function saveNovel(id, isEdit) {
+            const novel = {
+                id: id,
+                title: document.getElementById('novelTitle').value,
+                prompt: document.getElementById('novelPrompt').value,
+                content: document.getElementById('novelContent').value,
+                notes: document.getElementById('novelNotes').value,
+                relatedMaterials: [],
+                updatedAt: Date.now()
+            };
+
+            if (!novel.title) {
+                alert('請輸入標題！');
+                return;
+            }
+
+            if (isEdit) {
+                const index = data.novels.findIndex(n => n.id === id);
+                novel.createdAt = data.novels[index].createdAt;
+                data.novels[index] = novel;
+            } else {
+                novel.createdAt = Date.now();
+                data.novels.push(novel);
+            }
+
+            saveData();
+            showNovels();
+        }
+
+        // AI助手頁面
+        function showAI() {
+            document.getElementById('pageContent').innerHTML = `
+                <div class="page-header">
+                    <h1 class="page-title">🤖 AI創作助手</h1>
+                </div>
+
+                <div class="ai-assistant">
+                    <h2 style="margin-bottom: 1.5rem;">選擇要使用的素材</h2>
+                    
+                    <h3 style="margin-bottom: 1rem;">👤 角色</h3>
+                    <div class="material-selector">
+                        ${data.characters.map(char => `
+                            <div class="material-item">
+                                <input type="checkbox" id="ai-char-${char.id}" value="${char.id}">
+                                <label for="ai-char-${char.id}">${char.name}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem;">🌍 背景</h3>
+                    <div class="material-selector">
+                        ${data.backgrounds.map(bg => `
+                            <div class="material-item">
+                                <input type="checkbox" id="ai-bg-${bg.id}" value="${bg.id}">
+                                <label for="ai-bg-${bg.id}">${bg.name}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem;">🔐 秘密設定</h3>
+                    <div class="material-selector">
+                        ${data.secrets.map(secret => `
+                            <div class="material-item">
+                                <input type="checkbox" id="ai-secret-${secret.id}" value="${secret.id}">
+                                <label for="ai-secret-${secret.id}">${secret.title}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 style="margin-bottom: 1rem;">📝 提示詞生成</h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">快速模板</label>
+                        <select class="form-select" onchange="applyTemplate(this.value)">
+                            <option value="">選擇模板...</option>
+                            <option value="story">創作完整故事</option>
+                            <option value="dialogue">角色對話</option>
+                            <option value="scene">場景描述</option>
+                            <option value="dnd">DND角色卡</option>
+                            <option value="plot">劇情分析</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">自訂提示詞</label>
+                        <textarea class="form-textarea" id="aiPrompt" placeholder="輸入你的創作需求..." style="min-height: 300px;"></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" onclick="generatePrompt()">
+                            <span>🎲</span> 生成提示詞
+                        </button>
+                        <button class="btn btn-secondary" onclick="copyPrompt()">
+                            <span>📋</span> 複製
+                        </button>
+                        <button class="btn btn-primary" onclick="sendToPerplexity()">
+                            <span>🚀</span> 發送到Perplexity
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>💡 使用提示</h3>
+                    <ul style="margin-top: 1rem; padding-left: 1.5rem; color: var(--text-secondary);">
+                        <li>選擇相關的角色、背景和秘密設定</li>
+                        <li>使用快速模板或自訂提示詞</li>
+                        <li>點擊「生成提示詞」會自動整合所選素材</li>
+                        <li>可以直接發送到Perplexity進行創作</li>
+                    </ul>
+                </div>
+            `;
+        }
+
+        // 應用模板
+        function applyTemplate(template) {
+            const promptArea = document.getElementById('aiPrompt');
+            switch(template) {
+                case 'story':
+                    promptArea.value = '請根據以下角色和背景設定，創作一個完整的短篇故事（約2000字）：\n\n[角色資訊]\n\n[背景設定]\n\n故事要求：\n- 要有明確的開端、發展、高潮和結尾\n- 展現角色的性格特徵\n- 融入世界觀設定\n- 情節緊湊，引人入勝';
+                    break;
+                case 'dialogue':
+                    promptArea.value = '請為以下角色創作一段對話場景：\n\n[角色資訊]\n\n場景：[描述對話發生的地點和情境]\n\n要求：\n- 對話要符合各角色的性格\n- 展現角色之間的關係\n- 推進劇情發展\n- 約500-800字';
+                    break;
+                case 'scene':
+                    promptArea.value = '請詳細描述以下場景：\n\n[背景設定]\n\n描述要求：\n- 包含視覺、聽覺、嗅覺等感官細節\n- 營造獨特的氛圍\n- 展現場景的特色\n- 約300-500字';
+                    break;
+                case 'dnd':
+                    promptArea.value = '請為以下角色創建DND角色卡：\n\n[角色資訊]\n\n包含內容：\n- 基本屬性（力量、敏捷、體質、智力、感知、魅力）\n- 職業和等級\n- 技能專長\n- 裝備清單\n- 背景故事\n- 性格特徵和缺陷\n- 理想、羈絆和弱點';
+                    break;
+                case 'plot':
+                    promptArea.value = '請分析以下故事設定，並提供劇情發展建議：\n\n[角色和背景資訊]\n\n分析內容：\n- 潛在的衝突點\n- 角色發展弧線\n- 可能的劇情轉折\n- 主題探討建議\n- 結局走向選項';
+                    break;
+            }
+        }
+
+        // 生成提示詞
+        function generatePrompt() {
+            const selectedChars = [];
+            const selectedBgs = [];
+            const selectedSecrets = [];
+
+            // 收集選中的素材
+            document.querySelectorAll('input[id^="ai-char-"]:checked').forEach(input => {
+                const char = data.characters.find(c => c.id === input.value);
+                if (char) selectedChars.push(char);
+            });
+
+            document.querySelectorAll('input[id^="ai-bg-"]:checked').forEach(input => {
+                const bg = data.backgrounds.find(b => b.id === input.value);
+                if (bg) selectedBgs.push(bg);
+            });
+
+            document.querySelectorAll('input[id^="ai-secret-"]:checked').forEach(input => {
+                const secret = data.secrets.find(s => s.id === input.value);
+                if (secret) selectedSecrets.push(secret);
+            });
+
+            // 構建提示詞
+            let prompt = document.getElementById('aiPrompt').value || '請基於以下設定創作一個故事：\n\n';
+
+            if (selectedChars.length > 0) {
+                prompt += '\n【角色設定】\n';
+                selectedChars.forEach(char => {
+                    prompt += `\n角色名：${char.name}\n`;
+                    if (char.age) prompt += `年齡：${char.age}\n`;
+                    if (char.race) prompt += `種族：${char.race}\n`;
+                    if (char.appearance.hair || char.appearance.eyes) {
+                        prompt += `外貌：${char.appearance.hair ? '髮色-' + char.appearance.hair : ''} ${char.appearance.eyes ? '眼色-' + char.appearance.eyes : ''}\n`;
+                    }
+                    if (char.description) prompt += `外貌描述：${char.description}\n`;
+                    if (char.personality) prompt += `性格：${char.personality}\n`;
+                    if (char.background) prompt += `背景：${char.background}\n`;
+                    if (char.notes) prompt += `備註：${char.notes}\n`;
+                });
+            }
+
+            if (selectedBgs.length > 0) {
+                prompt += '\n【背景設定】\n';
+                selectedBgs.forEach(bg => {
+                    prompt += `\n場景：${bg.name}（${bg.type}）\n`;
+                    if (bg.description) prompt += `描述：${bg.description}\n`;
+                    if (bg.rules) prompt += `規則/法則：${bg.rules}\n`;
+                    if (bg.notes) prompt += `備註：${bg.notes}\n`;
+                });
+            }
+
+            if (selectedSecrets.length > 0) {
+                prompt += '\n【秘密設定】\n';
+                selectedSecrets.forEach(secret => {
+                    prompt += `\n${secret.title}（${secret.category}）\n`;
+                    if (secret.content) prompt += `內容：${secret.content}\n`;
+                    if (secret.impact) prompt += `影響：${secret.impact}\n`;
+                    if (secret.knownBy && secret.knownBy.length > 0) {
+                        prompt += `知情者：${secret.knownBy.join('、')}\n`;
+                    }
+                });
+            }
+
+            document.getElementById('aiPrompt').value = prompt;
+        }
+
+        // 複製提示詞
+        function copyPrompt() {
+            const prompt = document.getElementById('aiPrompt').value;
+            if (!prompt) {
+                alert('請先輸入或生成提示詞！');
+                return;
+            }
+
+            navigator.clipboard.writeText(prompt).then(() => {
+                alert('提示詞已複製到剪貼簿！');
+            }).catch(err => {
+                alert('複製失敗，請手動選擇複製');
+            });
+        }
+
+        // 發送到Perplexity
+        function sendToPerplexity() {
+            const prompt = document.getElementById('aiPrompt').value;
+            if (!prompt) {
+                alert('請先輸入或生成提示詞！');
+                return;
+            }
+
+            // 編碼提示詞
+            const encodedPrompt = encodeURIComponent(prompt);
+            
+            // 開啟Perplexity（注意：實際URL可能需要調整）
+            window.open(`https://www.perplexity.ai/?q=${encodedPrompt}`, '_blank');
+        }
+
+        // 設定頁面
+        function showSettings() {
+            document.getElementById('pageContent').innerHTML = `
+                <div class="page-header">
+                    <h1 class="page-title">⚙️ 系統設定</h1>
+                </div>
+
+                <div class="card">
+                    <h2 style="margin-bottom: 1.5rem;">🔒 安全設定</h2>
+                    <div class="form-group">
+                        <label class="form-label">修改密碼</label>
+                        <input type="password" class="form-input" id="newPassword" placeholder="輸入新密碼">
+                    </div>
+                    <button class="btn btn-primary" onclick="changePassword()">更新密碼</button>
+                </div>
+
+                <div class="card">
+                    <h2 style="margin-bottom: 1.5rem;">☁️ 備份與還原</h2>
+                    
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                        <button class="btn btn-secondary" onclick="exportData()">
+                            <span>📥</span> 匯出資料
+                        </button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">
+                            <span>📤</span> 匯入資料
+                        </button>
+                        <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(this)">
+                    </div>
+
+                    <div class="alert alert-warning">
+                        ⚠️ Google Drive 整合功能即將推出！
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 style="margin-bottom: 1.5rem;">📊 資料統計</h2>
+                    <div style="display: grid; gap: 1rem;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>總資料大小</span>
+                            <span>${(JSON.stringify(data).length / 1024).toFixed(2)} KB</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>建立時間</span>
+                            <span>${new Date(Math.min(...getAllItems().map(item => item.createdAt))).toLocaleDateString()}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>最後更新</span>
+                            <span>${new Date(Math.max(...getAllItems().map(item => item.updatedAt))).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="border-color: rgba(239, 68, 68, 0.5);">
+                    <h2 style="margin-bottom: 1.5rem; color: var(--danger);">⚠️ 危險區域</h2>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">此操作無法復原，請謹慎操作！</p>
+                    <button class="btn btn-danger" onclick="if(confirm('確定要清除所有資料嗎？此操作無法復原！')) clearAllData()">
+                        清除所有資料
+                    </button>
+                </div>
+            `;
+        }
+
+        // 輔助函數
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        function calculateTotalWords() {
+            let total = 0;
+            data.characters.forEach(char => {
+                total += (char.description || '').length;
+                total += (char.personality || '').length;
+                total += (char.background || '').length;
+                total += (char.notes || '').length;
+            });
+            data.backgrounds.forEach(bg => {
+                total += (bg.description || '').length;
+                total += (bg.rules || '').length;
+                total += (bg.notes || '').length;
+            });
+            data.secrets.forEach(secret => {
+                total += (secret.content || '').length;
+                total += (secret.impact || '').length;
+            });
+            data.novels.forEach(novel => {
+                total += (novel.content || '').length;
+            });
+            return total;
+        }
+
+        function getAllItems() {
+            return [
+                ...data.characters,
+                ...data.backgrounds,
+                ...data.secrets,
+                ...data.novels
+            ];
+        }
+
+        function getRecentItems() {
+            const allItems = [
+                ...data.characters.map(item => ({...item, type: '角色', icon: '👤'})),
+                ...data.backgrounds.map(item => ({...item, type: '背景', icon: '🌍', title: item.name})),
+                ...data.secrets.map(item => ({...item, type: '秘密', icon: '🔐'})),
+                ...data.novels.map(item => ({...item, type: '小說', icon: '📖'}))
+            ];
+            
+            return allItems
+                .sort((a, b) => b.updatedAt - a.updatedAt)
+                .slice(0, 5)
+                .map(item => ({
+                    ...item,
+                    title: item.title || item.name
+                }));
+        }
+
+        // 刪除項目
+        function deleteItem(type, id) {
+            if (!confirm('確定要刪除這個項目嗎？')) return;
+            
+            const index = data[type].findIndex(item => item.id === id);
+            if (index > -1) {
+                data[type].splice(index, 1);
+                saveData();
+                
+                // 重新載入當前頁面
+                switch(type) {
+                    case 'characters': showCharacters(); break;
+                    case 'backgrounds': showBackgrounds(); break;
+                    case 'secrets': showSecrets(); break;
+                    case 'novels': showNovels(); break;
+                }
+            }
+        }
+
+        // 搜尋功能
+        function searchCharacters(query) {
+            const filtered = data.characters.filter(char => 
+                char.name.toLowerCase().includes(query.toLowerCase()) ||
+                (char.description || '').toLowerCase().includes(query.toLowerCase())
+            );
+            document.getElementById('charactersList').innerHTML = renderCharacters(filtered);
+        }
+
+        function searchBackgrounds(query) {
+            const filtered = data.backgrounds.filter(bg => 
+                bg.name.toLowerCase().includes(query.toLowerCase()) ||
+                (bg.description || '').toLowerCase().includes(query.toLowerCase())
+            );
+            document.getElementById('backgroundsList').innerHTML = renderBackgrounds(filtered);
+        }
+
+        function searchSecrets(query) {
+            const filtered = data.secrets.filter(secret => 
+                secret.title.toLowerCase().includes(query.toLowerCase()) ||
+                (secret.content || '').toLowerCase().includes(query.toLowerCase())
+            );
+            document.getElementById('secretsList').innerHTML = renderSecrets(filtered);
+        }
+
+        function searchNovels(query) {
+            const filtered = data.novels.filter(novel => 
+                novel.title.toLowerCase().includes(query.toLowerCase()) ||
+                (novel.content || '').toLowerCase().includes(query.toLowerCase())
+            );
+            document.getElementById('novelsList').innerHTML = renderNovels(filtered);
+        }
+
+        // 篩選功能
+        function filterByTag(tag, type) {
+            if (type === 'characters') {
+                const filtered = tag ? data.characters.filter(char => char.tags.includes(tag)) : data.characters;
+                document.getElementById('charactersList').innerHTML = renderCharacters(filtered);
+            }
+        }
+
+        function filterByType(type, dataType) {
+            if (dataType === 'backgrounds') {
+                const filtered = type ? data.backgrounds.filter(bg => bg.type === type) : data.backgrounds;
+                document.getElementById('backgroundsList').innerHTML = renderBackgrounds(filtered);
+            }
+        }
+
+        function filterByCategory(category, type) {
+            if (type === 'secrets') {
+                const filtered = category ? data.secrets.filter(secret => secret.category === category) : data.secrets;
+                document.getElementById('secretsList').innerHTML = renderSecrets(filtered);
+            }
+        }
+
+        // 設定功能
+        function changePassword() {
+            const newPassword = document.getElementById('newPassword').value;
+            if (!newPassword) {
+                alert('請輸入新密碼！');
+                return;
+            }
+            
+            data.settings.password = newPassword;
+            saveData();
+            alert('密碼已更新！');
+            document.getElementById('newPassword').value = '';
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `novel-materials-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (confirm('確定要匯入資料嗎？這將覆蓋現有資料！')) {
+                        data = importedData;
+                        saveData();
+                        location.reload();
+                    }
+                } catch (error) {
+                    alert('匯入失敗！請確認檔案格式正確。');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function clearAllData() {
+            data = {
+                characters: [],
+                backgrounds: [],
+                secrets: [],
+                novels: [],
+                settings: {
+                    password: 'admin',
+                    autoBackup: true,
+                    googleDriveToken: null
+                }
+            };
+            saveData();
+            location.reload();
+        }
+
+        // 快速分類功能
+        function quickClassify(type) {
+            const content = document.getElementById('quickContent').value;
+            if (!content) {
+                alert('請先輸入內容！');
+                return;
+            }
+
+            switch(type) {
+                case 'character':
+                    const charId = generateId();
+                    data.characters.push({
+                        id: charId,
+                        name: '未命名角色',
+                        age: '',
+                        appearance: { hair: '', eyes: '' },
+                        race: '',
+                        description: content,
+                        personality: '',
+                        background: '',
+                        notes: '',
+                        tags: [],
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    });
+                    saveData();
+                    editCharacter(charId);
+                    break;
+                    
+                case 'background':
+                    const bgId = generateId();
+                    data.backgrounds.push({
+                        id: bgId,
+                        name: '未命名場景',
+                        type: '地點',
+                        description: content,
+                        rules: '',
+                        notes: '',
+                        tags: [],
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    });
+                    saveData();
+                    editBackground(bgId);
+                    break;
+                    
+                case 'novel':
+                    const novelId = generateId();
+                    data.novels.push({
+                        id: novelId,
+                        title: '未命名小說',
+                        prompt: '',
+                        content: content,
+                        notes: '',
+                        relatedMaterials: [],
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    });
+                    saveData();
+                    editNovel(novelId);
+                    break;
+            }
+        }
+
+        // 智能分類建議
+        function suggestClassification(content) {
+            const suggestion = document.getElementById('aiSuggestion');
+            const suggestionText = document.getElementById('suggestionText');
+            
+            // 簡單的關鍵詞分析
+            const lowerContent = content.toLowerCase();
+            let type = '';
+            let confidence = '';
+            
+            if (lowerContent.includes('他') || lowerContent.includes('她') || lowerContent.includes('名字') || 
+                lowerContent.includes('歲') || lowerContent.includes('性格') || lowerContent.includes('外貌')) {
+                type = '角色描述';
+                confidence = '高';
+            } else if (lowerContent.includes('地方') || lowerContent.includes('城市') || lowerContent.includes('世界') ||
+                       lowerContent.includes('規則') || lowerContent.includes('環境') || lowerContent.includes('場景')) {
+                type = '場景描述';
+                confidence = '高';
+            } else if (lowerContent.includes('故事') || lowerContent.includes('劇情') || content.length > 500) {
+                type = '小說內容';
+                confidence = '中';
+            } else {
+                type = '未知類型';
+                confidence = '低';
+            }
+            
+            suggestion.style.display = 'flex';
+            suggestionText.textContent = `${type} (信心度: ${confidence})`;
+        }
+
+        // 自動分類
+        function autoClassify() {
+            const content = document.getElementById('quickContent').value;
+            if (!content) {
+                alert('請先輸入內容！');
+                return;
+            }
+            
+            const lowerContent = content.toLowerCase();
+            
+            if (lowerContent.includes('他') || lowerContent.includes('她') || lowerContent.includes('名字') || 
+                lowerContent.includes('歲') || lowerContent.includes('性格')) {
+                quickClassify('character');
+            } else if (lowerContent.includes('地方') || lowerContent.includes('城市') || lowerContent.includes('世界') ||
+                       lowerContent.includes('規則') || lowerContent.includes('環境')) {
+                quickClassify('background');
+            } else {
+                quickClassify('novel');
+            }
+        }
+
+        // 點擊外部關閉下拉選單
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.multi-select')) {
+                const dropdowns = document.querySelectorAll('.multi-select-dropdown');
+                dropdowns.forEach(dropdown => dropdown.classList.remove('show'));
+            }
+        });
+
+        // 防止表單提交刷新頁面
+        document.addEventListener('submit', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
