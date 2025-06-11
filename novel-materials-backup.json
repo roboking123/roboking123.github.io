@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-06-11T15:06:46.997Z",
+  "timestamp": "2025-06-11T15:06:55.788Z",
   "data": {
     "characters": [
       {
@@ -19,6 +19,12 @@
         "content": "淨眼",
         "createdAt": "2025-06-11T15:06:46.997Z",
         "updatedAt": "2025-06-11T15:06:46.997Z"
+      },
+      {
+        "title": "夜澈",
+        "content": "夜雨的哥哥",
+        "createdAt": "2025-06-11T15:06:55.788Z",
+        "updatedAt": "2025-06-11T15:06:55.788Z"
       }
     ],
     "backgrounds": [],
