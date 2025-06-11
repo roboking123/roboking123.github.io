@@ -660,13 +660,38 @@
             loadGitHubConfig();
         });
 
-        // 載入資料
+                // 修正資料初始化（在 loadData 函數中）
         function loadData() {
             const savedData = localStorage.getItem('novelMaterials');
             if (savedData) {
-                data = JSON.parse(savedData);
+                try {
+                    data = JSON.parse(savedData);
+                } catch (error) {
+                    console.error('載入資料失敗:', error);
+                    data = {
+                        characters: [],
+                        backgrounds: [],
+                        secrets: [],
+                        novels: []
+                    };
+                }
+            } else {
+                // 確保資料結構完整
+                data = {
+                    characters: [],
+                    backgrounds: [],
+                    secrets: [],
+                    novels: []
+                };
             }
+            
+            // 確保所有必要的陣列都存在
+            if (!data.characters) data.characters = [];
+            if (!data.backgrounds) data.backgrounds = [];
+            if (!data.secrets) data.secrets = [];
+            if (!data.novels) data.novels = [];
         }
+
 
         // 保存資料
         function saveData() {
@@ -766,10 +791,21 @@
             });
         }
 
-        // 開啟新增模態框
         function openAddModal(type) {
+            // 驗證類型
+            const validTypes = ['characters', 'backgrounds', 'secrets'];
+            if (!validTypes.includes(type)) {
+                console.error('無效的類型:', type);
+                return;
+            }
+            
             currentModalType = type;
             editingId = null;
+            
+            // 確保資料陣列存在
+            if (!data[type]) {
+                data[type] = [];
+            }
             
             const modalTitle = document.getElementById('modal-title');
             modalTitle.textContent = `新增${getTypeName(type)}`;
@@ -779,6 +815,7 @@
             
             document.getElementById('addModal').style.display = 'block';
         }
+
 
         // 編輯項目
         function editItem(type, index) {
@@ -810,12 +847,34 @@
             document.getElementById('addModal').style.display = 'none';
         }
 
-        // 新增表單提交
+        // 修正表單提交事件
         document.getElementById('add-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const title = document.getElementById('item-title').value;
-            const content = document.getElementById('item-content').value;
+            const title = document.getElementById('item-title').value.trim();
+            const content = document.getElementById('item-content').value.trim();
+            
+            // 驗證輸入
+            if (!title) {
+                alert('請填寫標題');
+                return;
+            }
+            
+            if (!content) {
+                alert('請填寫內容');
+                return;
+            }
+            
+            // 驗證模態類型
+            if (!currentModalType) {
+                alert('系統錯誤：未知的項目類型');
+                return;
+            }
+            
+            // 確保資料陣列存在
+            if (!data[currentModalType]) {
+                data[currentModalType] = [];
+            }
             
             const item = {
                 title: title,
@@ -836,6 +895,7 @@
             renderSection(currentModalType);
             closeModal();
         });
+
 
         // 開啟小說模態框
         function openNovelModal() {
