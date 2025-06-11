@@ -615,7 +615,7 @@
                     
                     <div class="action-buttons">
                         <button class="btn btn-primary" onclick="connectGitHub()">連接 GitHub</button>
-                        <button class="btn btn-secondary" onclick="syncToGitHub()">上傳同步</button>
+                        <button class="btn btn-secondary" onclick="()">上傳同步</button>
                         <button class="btn btn-success" onclick="syncFromGitHub()">下載同步</button>
                     </div>
                 </div>
@@ -1281,6 +1281,7 @@
         }
 
         // 同步上傳到 GitHub
+        // 修正版 - 上傳同步到 GitHub
         async function syncToGitHub() {
             if (!githubConfig.connected) {
                 alert('請先連接 GitHub');
@@ -1296,7 +1297,16 @@
                 };
                 
                 const jsonString = JSON.stringify(backupData, null, 2);
-                const base64Content = btoa(unescape(encodeURIComponent(jsonString)));
+                
+                // 修正中文編碼問題 - 使用更可靠的方法
+                const base64Content = btoa(
+                    encodeURIComponent(jsonString).replace(
+                        /%([0-9A-F]{2})/g,
+                        function toSolidBytes(match, p1) {
+                            return String.fromCharCode('0x' + p1);
+                        }
+                    )
+                );
                 
                 // 檢查檔案是否已存在
                 let sha = null;
@@ -1334,7 +1344,9 @@
                 });
                 
                 if (response.ok) {
+                    const result = await response.json();
                     addSyncLog('上傳同步到 GitHub 成功');
+                    addSyncLog(`檔案 URL: ${result.content.html_url}`);
                 } else {
                     const errorData = await response.json();
                     throw new Error(`GitHub API 錯誤: ${response.status} - ${errorData.message}`);
@@ -1345,8 +1357,8 @@
                 console.error('GitHub 同步錯誤:', error);
             }
         }
-
-        // 從 GitHub 下載同步
+        
+        // 修正版 - 從 GitHub 下載同步
         async function syncFromGitHub() {
             if (!githubConfig.connected) {
                 alert('請先連接 GitHub');
@@ -1364,8 +1376,15 @@
                 
                 if (response.ok) {
                     const fileData = await response.json();
-                    const content = atob(fileData.content);
-                    const backupData = JSON.parse(content);
+                    
+                    // 修正中文解碼問題 - 使用更可靠的方法
+                    const decodedContent = decodeURIComponent(
+                        atob(fileData.content).split('').map(function(c) {
+                            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                        }).join('')
+                    );
+                    
+                    const backupData = JSON.parse(decodedContent);
                     
                     if (confirm('下載同步將覆蓋本地資料，確定要繼續嗎？')) {
                         data = backupData.data;
