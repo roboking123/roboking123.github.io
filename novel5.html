@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小說素材庫</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab.active {
+            background: white;
+            border-bottom: 3px solid #4facfe;
+            color: #4facfe;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+        }
+
+        .content {
+            padding: 30px;
+            min-height: 500px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .item-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .item-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .item-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .item-content {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .selection-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .selection-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .selection-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .selection-item input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .selection-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .github-settings {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .github-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #28a745;
+        }
+
+        .status-indicator.disconnected {
+            background: #dc3545;
+        }
+
+        .backup-log {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .selection-count {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+
+            .nav-tab {
+                flex: none;
+                min-width: 50%;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 小說素材庫</h1>
+            <p>管理您的角色、背景與秘密設定</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('characters')">👤 角色設定</button>
+            <button class="nav-tab" onclick="showSection('backgrounds')">🌍 故事背景</button>
+            <button class="nav-tab" onclick="showSection('secrets')">🔐 秘密設定</button>
+            <button class="nav-tab" onclick="showSection('novels')">📖 小說管理</button>
+            <button class="nav-tab" onclick="showSection('settings')">⚙️ 設定</button>
+        </div>
+
+        <div class="content">
+            <!-- 角色設定 -->
+            <div id="characters" class="section active">
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="openAddModal('character')">➕ 新增角色</button>
+                </div>
+                
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="搜尋角色..." onkeyup="searchItems('characters')">
+                </div>
+
+                <div id="characters-grid" class="items-grid">
+                    <!-- 角色卡片將在這里動態生成 -->
+                </div>
+            </div>
+
+            <!-- 故事背景 -->
+            <div id="backgrounds" class="section">
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="openAddModal('background')">➕ 新增背景</button>
+                </div>
+                
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="搜尋背景..." onkeyup="searchItems('backgrounds')">
+                </div>
+
+                <div id="backgrounds-grid" class="items-grid">
+                    <!-- 背景卡片將在這里動態生成 -->
+                </div>
+            </div>
+
+            <!-- 秘密設定 -->
+            <div id="secrets" class="section">
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="openAddModal('secret')">➕ 新增秘密</button>
+                </div>
+                
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="搜尋秘密..." onkeyup="searchItems('secrets')">
+                </div>
+
+                <div id="secrets-grid" class="items-grid">
+                    <!-- 秘密卡片將在這里動態生成 -->
+                </div>
+            </div>
+
+            <!-- 小說管理 -->
+            <div id="novels" class="section">
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="openNovelModal()">➕ 新增小說</button>
+                </div>
+                
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="搜尋小說..." onkeyup="searchItems('novels')">
+                </div>
+
+                <div id="novels-grid" class="items-grid">
+                    <!-- 小說卡片將在這里動態生成 -->
+                </div>
+            </div>
+
+            <!-- 設定 -->
+            <div id="settings" class="section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-characters">0</div>
+                        <div class="stat-label">角色</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-backgrounds">0</div>
+                        <div class="stat-label">背景</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-secrets">0</div>
+                        <div class="stat-label">秘密</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-novels">0</div>
+                        <div class="stat-label">小說</div>
+                    </div>
+                </div>
+
+                <div class="github-settings">
+                    <h3>🐙 GitHub 備份設定</h3>
+                    <div class="github-status">
+                        <div class="status-indicator" id="github-status"></div>
+                        <span id="github-status-text">未連接</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">GitHub Token:</label>
+                        <input type="password" class="form-input" id="github-token" placeholder="輸入 GitHub Personal Access Token">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Repository:</label>
+                        <input type="text" class="form-input" id="github-repo" placeholder="username/repository-name">
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="connectGitHub()">連接 GitHub</button>
+                        <button class="btn btn-secondary" onclick="syncToGitHub()">立即同步</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>📱 本地備份</h3>
+                    <div class="action-buttons">
+                        <button class="btn btn-success" onclick="exportData()">匯出資料</button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">匯入資料</button>
+                        <input type="file" id="import-file" style="display: none" accept=".json" onchange="importData()">
+                    </div>
+                </div>
+
+                <div>
+                    <h3>📊 同步記錄</h3>
+                    <div class="backup-log" id="sync-log">
+                        系統啟動完成<br>
+                        等待 GitHub 連接...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增/編輯模態框 -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">新增項目</h2>
+            <form id="add-form">
+                <div class="form-group">
+                    <label class="form-label">標題:</label>
+                    <input type="text" class="form-input" id="item-title" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">內容:</label>
+                    <textarea class="form-textarea" id="item-content" required></textarea>
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 小說新增模態框 -->
+    <div id="novelModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeNovelModal()">&times;</span>
+            <h2>📖 新增小說</h2>
+            <form id="novel-form">
+                <div class="form-group">
+                    <label class="form-label">小說標題:</label>
+                    <input type="text" class="form-input" id="novel-title" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">簡介:</label>
+                    <textarea class="form-textarea" id="novel-description"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">選擇角色:</label>
+                    <div class="selection-count" id="characters-count">已選擇: 0 個角色</div>
+                    <div class="selection-container">
+                        <div class="selection-header">
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="selectAll('novel-characters')">全選</button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="deselectAll('novel-characters')">全部取消</button>
+                        </div>
+                        <div id="novel-characters">
+                            <!-- 角色選擇項目將在這里動態生成 -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">選擇背景:</label>
+                    <div class="selection-count" id="backgrounds-count">已選擇: 0 個背景</div>
+                    <div class="selection-container">
+                        <div class="selection-header">
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="selectAll('novel-backgrounds')">全選</button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="deselectAll('novel-backgrounds')">全部取消</button>
+                        </div>
+                        <div id="novel-backgrounds">
+                            <!-- 背景選擇項目將在這里動態生成 -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">選擇秘密:</label>
+                    <div class="selection-count" id="secrets-count">已選擇: 0 個秘密</div>
+                    <div class="selection-container">
+                        <div class="selection-header">
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="selectAll('novel-secrets')">全選</button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="deselectAll('novel-secrets')">全部取消</button>
+                        </div>
+                        <div id="novel-secrets">
+                            <!-- 秘密選擇項目將在這里動態生成 -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary">創建小說</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeNovelModal()">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 全域變數
+        let currentSection = 'characters';
+        let currentModalType = '';
+        let editingId = null;
+        
+        // 資料存儲
+        let data = {
+            characters: [],
+            backgrounds: [],
+            secrets: [],
+            novels: []
+        };
+
+        // GitHub 設定
+        let githubConfig = {
+            token: '',
+            repo: '',
+            connected: false
+        };
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            updateStats();
+            renderAllSections();
+            loadGitHubConfig();
+        });
+
+        // 載入資料
+        function loadData() {
+            const savedData = localStorage.getItem('novelMaterials');
+            if (savedData) {
+                data = JSON.parse(savedData);
+            }
+        }
+
+        // 保存資料
+        function saveData() {
+            localStorage.setItem('novelMaterials', JSON.stringify(data));
+            updateStats();
+            syncToGitHub();
+        }
+
+        // 載入 GitHub 設定
+        function loadGitHubConfig() {
+            const savedConfig = localStorage.getItem('githubConfig');
+            if (savedConfig) {
+                githubConfig = JSON.parse(savedConfig);
+                document.getElementById('github-token').value = githubConfig.token;
+                document.getElementById('github-repo').value = githubConfig.repo;
+                updateGitHubStatus();
+            }
+        }
+
+        // 保存 GitHub 設定
+        function saveGitHubConfig() {
+            localStorage.setItem('githubConfig', JSON.stringify(githubConfig));
+        }
+
+        // 顯示區段
+        function showSection(section) {
+            // 隱藏所有區段
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            
+            // 顯示選中的區段
+            document.getElementById(section).classList.add('active');
+            event.target.classList.add('active');
+            
+            currentSection = section;
+            renderSection(section);
+        }
+
+        // 渲染所有區段
+        function renderAllSections() {
+            renderSection('characters');
+            renderSection('backgrounds');
+            renderSection('secrets');
+            renderSection('novels');
+        }
+
+        // 渲染特定區段
+        function renderSection(section) {
+            const container = document.getElementById(section + '-grid');
+            if (!container) return;
+
+            container.innerHTML = '';
+            
+            data[section].forEach((item, index) => {
+                const card = createItemCard(item, section, index);
+                container.appendChild(card);
+            });
+        }
+
+        // 創建項目卡片
+        function createItemCard(item, type, index) {
+            const card = document.createElement('div');
+            card.className = 'item-card';
+            
+            // 處理內容顯示 - 秘密設定不再需要隱藏
+            let contentHtml = `<div class="item-content">${item.content}</div>`;
+            
+            card.innerHTML = `
+                <div class="item-title">${item.title}</div>
+                ${contentHtml}
+                <div class="item-meta">
+                    <span>創建時間: ${new Date(item.createdAt).toLocaleDateString()}</span>
+                    <div class="item-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="editItem('${type}', ${index})">編輯</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteItem('${type}', ${index})">刪除</button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // 搜尋功能
+        function searchItems(section) {
+            const searchTerm = event.target.value.toLowerCase();
+            const cards = document.querySelectorAll(`#${section}-grid .item-card`);
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.item-title').textContent.toLowerCase();
+                const content = card.querySelector('.item-content').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || content.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 開啟新增模態框
+        function openAddModal(type) {
+            currentModalType = type;
+            editingId = null;
+            
+            const modalTitle = document.getElementById('modal-title');
+            modalTitle.textContent = `新增${getTypeName(type)}`;
+            
+            document.getElementById('item-title').value = '';
+            document.getElementById('item-content').value = '';
+            
+            document.getElementById('addModal').style.display = 'block';
+        }
+
+        // 編輯項目
+        function editItem(type, index) {
+            currentModalType = type;
+            editingId = index;
+            
+            const item = data[type][index];
+            const modalTitle = document.getElementById('modal-title');
+            modalTitle.textContent = `編輯${getTypeName(type)}`;
+            
+            document.getElementById('item-title').value = item.title;
+            document.getElementById('item-content').value = item.content;
+            
+            document.getElementById('addModal').style.display = 'block';
+        }
+
+        // 刪除項目
+        function deleteItem(type, index) {
+            if (confirm('確定要刪除這個項目嗎？')) {
+                data[type].splice(index, 1);
+                saveData();
+                renderSection(type);
+                addSyncLog(`刪除了一個${getTypeName(type)}`);
+            }
+        }
+
+        // 關閉模態框
+        function closeModal() {
+            document.getElementById('addModal').style.display = 'none';
+        }
+
+        // 新增表單提交
+        document.getElementById('add-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('item-title').value;
+            const content = document.getElementById('item-content').value;
+            
+            const item = {
+                title: title,
+                content: content,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            if (editingId !== null) {
+                data[currentModalType][editingId] = item;
+                addSyncLog(`更新了${getTypeName(currentModalType)}: ${title}`);
+            } else {
+                data[currentModalType].push(item);
+                addSyncLog(`新增了${getTypeName(currentModalType)}: ${title}`);
+            }
+            
+            saveData();
+            renderSection(currentModalType);
+            closeModal();
+        });
+
+        // 開啟小說模態框
+        function openNovelModal() {
+            document.getElementById('novel-title').value = '';
+            document.getElementById('novel-description').value = '';
+            
+            renderNovelSelections();
+            document.getElementById('novelModal').style.display = 'block';
+        }
+
+        // 關閉小說模態框
+        function closeNovelModal() {
+            document.getElementById('novelModal').style.display = 'none';
+        }
+
+        // 渲染小說選擇項目
+        function renderNovelSelections() {
+            renderSelection('novel-characters', data.characters, 'characters');
+            renderSelection('novel-backgrounds', data.backgrounds, 'backgrounds');
+            renderSelection('novel-secrets', data.secrets, 'secrets');
+        }
+
+        // 渲染選擇項目
+        function renderSelection(containerId, items, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'selection-item';
+                div.innerHTML = `
+                    <input type="checkbox" id="${type}-${index}" onchange="updateSelectionCount('${type}')">
+                    <label for="${type}-${index}">${item.title}</label>
+                `;
+                container.appendChild(div);
+            });
+            
+            updateSelectionCount(type);
+        }
+
+        // 全選功能
+        function selectAll(containerId) {
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = true);
+            
+            // 更新計數
+            const type = containerId.replace('novel-', '');
+            updateSelectionCount(type);
+        }
+
+        // 全部取消功能
+        function deselectAll(containerId) {
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+            
+            // 更新計數
+            const type = containerId.replace('novel-', '');
+            updateSelectionCount(type);
+        }
+
+        // 更新選擇計數
+        function updateSelectionCount(type) {
+            const container = document.getElementById(`novel-${type}`);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            const checkedCount = container.querySelectorAll('input[type="checkbox"]:checked').length;
+            const totalCount = checkboxes.length;
+            
+            const countElement = document.getElementById(`${type}-count`);
+            countElement.textContent = `已選擇: ${checkedCount} 個${getTypeName(type.slice(0, -1))}`;
+        }
+
+        // 小說表單提交
+        document.getElementById('novel-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('novel-title').value;
+            const description = document.getElementById('novel-description').value;
+            
+            // 收集選中的項目
+            const selectedCharacters = getSelectedItems('novel-characters');
+            const selectedBackgrounds = getSelectedItems('novel-backgrounds');
+            const selectedSecrets = getSelectedItems('novel-secrets');
+            
+            const novel = {
+                title: title,
+                description: description,
+                characters: selectedCharacters,
+                backgrounds: selectedBackgrounds,
+                secrets: selectedSecrets,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            data.novels.push(novel);
+            saveData();
+            renderSection('novels');
+            closeNovelModal();
+            addSyncLog(`創建了小說: ${title}`);
+        });
+
+        // 獲取選中的項目
+        function getSelectedItems(containerId) {
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
+            const selected = [];
+            
+            checkboxes.forEach(checkbox => {
+                const label = container.querySelector(`label[for="${checkbox.id}"]`);
+                const index = parseInt(checkbox.id.split('-')[1]);
+                const type = checkbox.id.split('-')[0];
+                
+                selected.push({
+                    title: label.textContent,
+                    content: data[type][index].content
+                });
+            });
+            
+            return selected;
+        }
+
+        // 創建小說卡片
+        function createNovelCard(novel, index) {
+            const card = document.createElement('div');
+            card.className = 'item-card';
+            
+            const materialsInfo = `
+                <p><strong>角色:</strong> ${novel.characters.length} 個</p>
+                <p><strong>背景:</strong> ${novel.backgrounds.length} 個</p>
+                <p><strong>秘密:</strong> ${novel.secrets.length} 個</p>
+            `;
+            
+            card.innerHTML = `
+                <div class="item-title">${novel.title}</div>
+                <div class="item-content">${novel.description}</div>
+                <div class="item-content">${materialsInfo}</div>
+                <div class="item-meta">
+                    <span>創建時間: ${new Date(novel.createdAt).toLocaleDateString()}</span>
+                    <div class="item-actions">
+                        <button class="btn btn-sm btn-primary" onclick="viewNovel(${index})">查看</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteItem('novels', ${index})">刪除</button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // 查看小說詳情
+        function viewNovel(index) {
+            const novel = data.novels[index];
+            let content = `
+                <h3>${novel.title}</h3>
+                <p><strong>簡介:</strong> ${novel.description}</p>
+                
+                <h4>📖 使用的素材:</h4>
+                
+                <h5>👤 角色 (${novel.characters.length}個):</h5>
+                ${novel.characters.map(char => `
+                    <div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <strong>${char.title}</strong><br>
+                        ${char.content}
+                    </div>
+                `).join('')}
+                
+                <h5>🌍 背景 (${novel.backgrounds.length}個):</h5>
+                ${novel.backgrounds.map(bg => `
+                    <div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <strong>${bg.title}</strong><br>
+                        ${bg.content}
+                    </div>
+                `).join('')}
+                
+                <h5>🔐 秘密 (${novel.secrets.length}個):</h5>
+                ${novel.secrets.map(secret => `
+                    <div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <strong>${secret.title}</strong><br>
+                        ${secret.content}
+                    </div>
+                `).join('')}
+            `;
+            
+            // 創建詳情模態框
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'block';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
+                    ${content}
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // 更新統計
+        function updateStats() {
+            document.getElementById('stat-characters').textContent = data.characters.length;
+            document.getElementById('stat-backgrounds').textContent = data.backgrounds.length;
+            document.getElementById('stat-secrets').textContent = data.secrets.length;
+            document.getElementById('stat-novels').textContent = data.novels.length;
+        }
+
+        // 連接 GitHub
+        function connectGitHub() {
+            const token = document.getElementById('github-token').value;
+            const repo = document.getElementById('github-repo').value;
+            
+            if (!token || !repo) {
+                alert('請填寫 GitHub Token 和 Repository');
+                return;
+            }
+            
+            githubConfig.token = token;
+            githubConfig.repo = repo;
+            githubConfig.connected = true;
+            
+            saveGitHubConfig();
+            updateGitHubStatus();
+            addSyncLog('GitHub 連接成功');
+        }
+
+        // 更新 GitHub 狀態
+        function updateGitHubStatus() {
+            const statusIndicator = document.getElementById('github-status');
+            const statusText = document.getElementById('github-status-text');
+            
+            if (githubConfig.connected) {
+                statusIndicator.classList.remove('disconnected');
+                statusText.textContent = `已連接到 ${githubConfig.repo}`;
+            } else {
+                statusIndicator.classList.add('disconnected');
+                statusText.textContent = '未連接';
+            }
+        }
+
+        // 同步到 GitHub
+        async function syncToGitHub() {
+            if (!githubConfig.connected) return;
+            
+            try {
+                // 這里應該實現實際的 GitHub API 調用
+                // 由於這是示例代碼，我們只是模擬同步過程
+                addSyncLog('開始同步到 GitHub...');
+                
+                // 模擬 API 請求延遲
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                addSyncLog('同步完成');
+            } catch (error) {
+                addSyncLog('同步失敗: ' + error.message);
+            }
+        }
+
+        // 匯出資料
+        function exportData() {
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `novel-materials-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            addSyncLog('資料匯出完成');
+        }
+
+        // 匯入資料
+        function importData() {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    if (confirm('匯入資料將覆蓋現有資料，確定要繼續嗎？')) {
+                        data = importedData;
+                        saveData();
+                        renderAllSections();
+                        addSyncLog('資料匯入完成');
+                    }
+                } catch (error) {
+                    alert('檔案格式錯誤');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // 新增同步記錄
+        function addSyncLog(message) {
+            const log = document.getElementById('sync-log');
+            const timestamp = new Date().toLocaleString();
+            log.innerHTML += `<br>[${timestamp}] ${message}`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // 獲取類型名稱
+        function getTypeName(type) {
+            const names = {
+                'character': '角色',
+                'background': '背景',
+                'secret': '秘密',
+                'novel': '小說'
+            };
+            return names[type] || type;
+        }
+
+        // 重新定義 renderSection 以處理不同的卡片類型
+        function renderSection(section) {
+            const container = document.getElementById(section + '-grid');
+            if (!container) return;
+
+            container.innerHTML = '';
+            
+            data[section].forEach((item, index) => {
+                let card;
+                if (section === 'novels') {
+                    card = createNovelCard(item, index);
+                } else {
+                    card = createItemCard(item, section, index);
+                }
+                container.appendChild(card);
+            });
+        }
+
+        // 點擊模態框外部關閉
+        window.onclick = function(event) {
+            const addModal = document.getElementById('addModal');
+            const novelModal = document.getElementById('novelModal');
+            
+            if (event.target === addModal) {
+                addModal.style.display = 'none';
+            }
+            if (event.target === novelModal) {
+                novelModal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
