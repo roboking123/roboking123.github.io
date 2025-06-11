@@ -1236,6 +1236,99 @@ function viewCharacter(id) {
     `;
 }
 
+// 查看總覽詳情
+function viewOutline(id) {
+    const outline = data.outlines.find(o => o.id === id);
+    if (!outline) return;
+
+    document.getElementById('pageContent').innerHTML = `
+        <div class="edit-page">
+            <div class="edit-header">
+                <h1 class="page-title">📋 ${outline.title}</h1>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-secondary" onclick="editOutline('${outline.id}')">編輯</button>
+                    <button class="btn btn-secondary" onclick="showOutlines()">返回</button>
+                </div>
+            </div>
+
+            ${outline.summary ? `
+                <div class="card">
+                    <h3>摘要</h3>
+                    <p style="margin-top: 1rem; white-space: pre-wrap; line-height: 1.6;">${outline.summary}</p>
+                </div>
+            ` : ''}
+
+            ${outline.content ? `
+                <div class="card">
+                    <h3>詳細內容</h3>
+                    <div style="margin-top: 1rem; white-space: pre-wrap; line-height: 1.6;">${outline.content}</div>
+                </div>
+            ` : ''}
+
+            ${outline.tags && outline.tags.length > 0 ? `
+                <div class="card">
+                    <h3>標籤</h3>
+                    <div class="card-meta" style="margin-top: 1rem;">
+                        ${outline.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            ` : ''}
+
+            <div class="card">
+                <h3>建立資訊</h3>
+                <div style="margin-top: 1rem;">
+                    <div><strong>建立時間：</strong>${new Date(outline.createdAt).toLocaleString()}</div>
+                    <div style="margin-top: 0.5rem;"><strong>最後更新：</strong>${new Date(outline.updatedAt).toLocaleString()}</div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// 查看世界觀詳情
+function viewWorldbuilding(id) {
+    const world = data.worldbuilding.find(w => w.id === id);
+    if (!world) return;
+
+    document.getElementById('pageContent').innerHTML = `
+        <div class="edit-page">
+            <div class="edit-header">
+                <h1 class="page-title">🌍 ${world.title}</h1>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-secondary" onclick="editWorldbuilding('${world.id}')">編輯</button>
+                    <button class="btn btn-secondary" onclick="showWorldbuilding()">返回</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>類型</h3>
+                <p style="margin-top: 1rem;"><span class="tag">${world.type}</span></p>
+            </div>
+
+            ${world.description ? `
+                <div class="card">
+                    <h3>描述</h3>
+                    <p style="margin-top: 1rem; white-space: pre-wrap; line-height: 1.6;">${world.description}</p>
+                </div>
+            ` : ''}
+
+            ${world.details ? `
+                <div class="card">
+                    <h3>詳細資訊</h3>
+                    <div style="margin-top: 1rem; white-space: pre-wrap; line-height: 1.6;">${world.details}</div>
+                </div>
+            ` : ''}
+
+            <div class="card">
+                <h3>建立資訊</h3>
+                <div style="margin-top: 1rem;">
+                    <div><strong>建立時間：</strong>${new Date(world.createdAt).toLocaleString()}</div>
+                    <div style="margin-top: 0.5rem;"><strong>最後更新：</strong>${new Date(world.updatedAt).toLocaleString()}</div>
+                </div>
+            </div>
+        </div>
+    `;
+}
 
 
         
@@ -2380,6 +2473,233 @@ function viewCharacter(id) {
             saveData();
             location.reload();
         }
+        function deleteOption(category, optionValue) {
+    if (confirm('確定要刪除這個選項嗎？')) {
+        const index = data.options[category].indexOf(optionValue);
+        if (index > -1) {
+            data.options[category].splice(index, 1);
+            saveData();
+            showSettings();
+        }
+    }
+}
+        // 修改 renderOutlines 函數
+function renderOutlines(outlines) {
+    if (outlines.length === 0) {
+        return '<p style="text-align: center; color: var(--text-secondary);">還沒有大綱，點擊上方按鈕新增第一個大綱！</p>';
+    }
+
+    return outlines.map(outline => `
+        <div class="card" style="cursor: pointer;" onclick="viewOutline('${outline.id}')">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">${outline.title}</div>
+                    <div class="card-meta">
+                        ${outline.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+                <div style="display: flex; gap: 0.5rem;" onclick="event.stopPropagation();">
+                    <button class="btn btn-secondary" onclick="editOutline('${outline.id}')">編輯</button>
+                    <button class="btn btn-danger" onclick="deleteItem('outlines', '${outline.id}')">刪除</button>
+                </div>
+            </div>
+            <div style="color: var(--text-secondary); margin-top: 0.5rem;">
+                ${outline.summary ? outline.summary.substring(0, 100) + '...' : '沒有摘要'}
+            </div>
+        </div>
+    `).join('');
+}
+
+// 修改 renderWorldbuilding 函數
+function renderWorldbuilding(worldbuilding) {
+    if (worldbuilding.length === 0) {
+        return '<p style="text-align: center; color: var(--text-secondary);">還沒有世界觀設定，點擊上方按鈕新增第一個設定！</p>';
+    }
+
+    return worldbuilding.map(world => `
+        <div class="card" style="cursor: pointer;" onclick="viewWorldbuilding('${world.id}')">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">${world.title}</div>
+                    <div class="card-meta">
+                        <span class="tag">${world.type}</span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 0.5rem;" onclick="event.stopPropagation();">
+                    <button class="btn btn-secondary" onclick="editWorldbuilding('${world.id}')">編輯</button>
+                    <button class="btn btn-danger" onclick="deleteItem('worldbuilding', '${world.id}')">刪除</button>
+                </div>
+            </div>
+            <div style="color: var(--text-secondary); margin-top: 0.5rem;">
+                ${world.description ? world.description.substring(0, 100) + '...' : '沒有描述'}
+            </div>
+        </div>
+    `).join('');
+}
+// 找到 showAIAssistant 函數並替換
+function showAIAssistant() {
+    document.getElementById('pageContent').innerHTML = `
+        <div class="page">
+            <div class="page-header">
+                <h1 class="page-title">🤖 AI 寫作助手</h1>
+            </div>
+
+            <!-- 快速模板區域 -->
+            <div class="card">
+                <h3>📝 快速模板生成</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <button class="btn btn-secondary" onclick="generateTemplate('character')">角色描述模板</button>
+                    <button class="btn btn-secondary" onclick="generateTemplate('scene')">場景描述模板</button>
+                    <button class="btn btn-secondary" onclick="generateTemplate('dialogue')">對話寫作模板</button>
+                    <button class="btn btn-secondary" onclick="generateTemplate('plot')">情節發展模板</button>
+                    <button class="btn btn-secondary" onclick="generateTemplate('emotion')">情感描寫模板</button>
+                    <button class="btn btn-secondary" onclick="generateTemplate('worldbuilding')">世界觀建構模板</button>
+                </div>
+                
+                <!-- 模板顯示區域 -->
+                <div id="templateResult" style="margin-top: 1rem; display: none;">
+                    <h4>生成的模板：</h4>
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; margin-top: 0.5rem;">
+                        <textarea id="generatedTemplate" class="form-input" style="width: 100%; height: 200px; resize: vertical;" placeholder="生成的模板將顯示在這裡..."></textarea>
+                    </div>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary" onclick="copyTemplate()">複製模板</button>
+                        <button class="btn btn-secondary" onclick="clearTemplate()">清除</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 自訂提示詞區域 -->
+            <div class="card">
+                <h3>✍️ 自訂提示詞生成</h3>
+                <div style="margin-top: 1rem;">
+                    <label class="form-label">寫作需求描述：</label>
+                    <textarea id="customPromptInput" class="form-input" rows="4" placeholder="請描述你的寫作需求，例如：我想寫一個關於科幻世界的角色介紹..."></textarea>
+                </div>
+                
+                <div style="margin-top: 1rem;">
+                    <label class="form-label">寫作風格：</label>
+                    <select id="writingStyleSelect" class="form-input">
+                        <option value="">選擇風格（可選）</option>
+                        <option value="formal">正式文學</option>
+                        <option value="casual">輕鬆隨意</option>
+                        <option value="poetic">詩意優美</option>
+                        <option value="dramatic">戲劇張力</option>
+                        <option value="humorous">幽默風趣</option>
+                        <option value="dark">黑暗風格</option>
+                    </select>
+                </div>
+
+                <div style="margin-top: 1rem;">
+                    <button class="btn btn-primary" onclick="generateCustomPrompt()">生成提示詞</button>
+                </div>
+
+                <!-- 自訂提示詞結果區域 -->
+                <div id="customPromptResult" style="margin-top: 1rem; display: none;">
+                    <h4>生成的提示詞：</h4>
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; margin-top: 0.5rem;">
+                        <textarea id="generatedCustomPrompt" class="form-input" style="width: 100%; height: 150px; resize: vertical;" placeholder="生成的提示詞將顯示在這裡..."></textarea>
+                    </div>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary" onclick="copyCustomPrompt()">複製提示詞</button>
+                        <button class="btn btn-secondary" onclick="clearCustomPrompt()">清除</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 使用說明 -->
+            <div class="card">
+                <h3>💡 使用說明</h3>
+                <ul style="margin-top: 1rem; line-height: 1.6;">
+                    <li><strong>快速模板：</strong>點擊按鈕生成常用的寫作模板</li>
+                    <li><strong>自訂提示詞：</strong>描述你的具體需求，生成個人化的寫作提示</li>
+                    <li><strong>複製功能：</strong>生成後可以直接複製到你的寫作工具中使用</li>
+                    <li><strong>風格選擇：</strong>選擇適合的寫作風格讓提示詞更精準</li>
+                </ul>
+            </div>
+        </div>
+    `;
+}
+// 生成快速模板
+function generateTemplate(type) {
+    const templates = {
+        character: "角色姓名：[姓名]\n年齡：[年齡]\n外貌特徵：[描述外貌特點]\n性格特質：[3-5個關鍵詞]\n背景故事：[簡述背景]\n目標動機：[角色想要達成什麼]\n衝突點：[內在或外在衝突]\n獨特之處：[讓角色與眾不同的地方]",
+        scene: "場景名稱：[場景名稱]\n時間：[時間設定]\n地點：[具體位置]\n氛圍：[整體感受]\n視覺描述：[讀者能看到什麼]\n聽覺描述：[環境聲音]\n氣味觸感：[其他感官感受]\n重要物品：[場景中的關鍵物件]",
+        dialogue: "對話目的：[這段對話要達成什麼]\n角色A：[角色名稱]\n- 說話風格：[正式/隨意/幽默等]\n- 情緒狀態：[當前心情]\n角色B：[角色名稱]\n- 說話風格：[正式/隨意/幽默等]\n- 情緒狀態：[當前心情]\n對話重點：[要傳達的關鍵信息]\n潛台詞：[沒有直接說出的含意]",
+        plot: "情節點：[這個情節要發生什麼]\n起因：[為什麼會發生]\n過程：[如何發展]\n結果：[導致什麼後果]\n影響角色：[對主角的影響]\n推進劇情：[如何推動故事前進]\n衝突類型：[人與人/人與環境/內心衝突]\n轉折點：[意外或轉變]",
+        emotion: "情緒類型：[喜悅/悲傷/憤怒/恐懼等]\n觸發原因：[什麼引起這個情緒]\n內在感受：[角色內心的想法]\n外在表現：[行為舉止變化]\n生理反應：[身體的反應]\n對話變化：[說話方式的改變]\n行動影響：[情緒如何影響決定]\n持續時間：[情緒會持續多久]",
+        worldbuilding: "世界名稱：[世界/地區名稱]\n世界類型：[現代/古代/科幻/奇幻等]\n地理環境：[地形地貌特色]\n社會制度：[政治體制]\n文化特色：[風俗習慣]\n科技水平：[技術發展程度]\n魔法/超能力：[特殊能力系統]\n歷史背景：[重要歷史事件]\n獨特規則：[這個世界的特殊法則]"
+    };
+
+    const template = templates[type];
+    if (template) {
+        document.getElementById('generatedTemplate').value = template;
+        document.getElementById('templateResult').style.display = 'block';
+        document.getElementById('generatedTemplate').focus();
+    }
+}
+
+// 生成自訂提示詞
+function generateCustomPrompt() {
+    const userInput = document.getElementById('customPromptInput').value.trim();
+    const style = document.getElementById('writingStyleSelect').value;
+    
+    if (!userInput) {
+        alert('請先描述你的寫作需求');
+        return;
+    }
+
+    let prompt = `根據以下需求創作：\n\n需求描述：${userInput}\n\n`;
+    
+    if (style) {
+        const styleDescriptions = {
+            formal: "請使用正式的文學風格，用詞優雅、結構嚴謹。",
+            casual: "請使用輕鬆隨意的風格，就像朋友間的對話。",
+            poetic: "請使用詩意優美的語言，重視韻律和意境。",
+            dramatic: "請營造強烈的戲劇張力和情感衝擊。",
+            humorous: "請加入幽默風趣的元素，讓讀者會心一笑。",
+            dark: "請使用黑暗風格，營造神秘或壓抑的氛圍。"
+        };
+        prompt += `寫作風格：${styleDescriptions[style]}\n\n`;
+    }
+
+    prompt += "請提供：\n1. 具體的寫作建議\n2. 可以參考的描寫角度\n3. 適合的詞彙和句式\n4. 需要注意的寫作要點";
+
+    document.getElementById('generatedCustomPrompt').value = prompt;
+    document.getElementById('customPromptResult').style.display = 'block';
+    document.getElementById('generatedCustomPrompt').focus();
+}
+
+// 複製模板
+function copyTemplate() {
+    const template = document.getElementById('generatedTemplate');
+    template.select();
+    document.execCommand('copy');
+    alert('模板已複製到剪貼板！');
+}
+
+// 複製自訂提示詞
+function copyCustomPrompt() {
+    const prompt = document.getElementById('generatedCustomPrompt');
+    prompt.select();
+    document.execCommand('copy');
+    alert('提示詞已複製到剪貼板！');
+}
+
+// 清除模板
+function clearTemplate() {
+    document.getElementById('generatedTemplate').value = '';
+    document.getElementById('templateResult').style.display = 'none';
+}
+
+// 清除自訂提示詞
+function clearCustomPrompt() {
+    document.getElementById('generatedCustomPrompt').value = '';
+    document.getElementById('customPromptInput').value = '';
+    document.getElementById('writingStyleSelect').value = '';
+    document.getElementById('customPromptResult').style.display = 'none';
+}
+
 
         // 快速分類功能
         function quickClassify(type) {
