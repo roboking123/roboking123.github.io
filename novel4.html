@@ -733,21 +733,10 @@
 
                         <!-- 智慧模板 -->
                         <div class="prompt-template">
-                            <h3>📝 智慧模板</h3>
+                            <h3>📝 素材資料</h3>
                             <div class="template-buttons">
-                                <button class="btn btn-secondary" onclick="useTemplate('story')">完整故事</button>
-                                <button class="btn btn-secondary" onclick="useTemplate('dialogue')">角色對話</button>
-                                <button class="btn btn-secondary" onclick="useTemplate('scene')">場景描述</button>
-                                <button class="btn btn-secondary" onclick="useTemplate('analysis')">劇情分析</button>
-                                <button class="btn btn-secondary" onclick="useTemplate('dnd')">DND角色</button>
+                                <button class="btn btn-primary" onclick="provideMaterialData()">📋 提供資料</button>
                             </div>
-                        </div>
-
-                        <!-- 🆕 額外要求輸入框 -->
-                        <div class="form-group">
-                            <label class="form-label">💭 額外要求</label>
-                            <textarea id="additionalRequirements" class="form-textarea auto-resize-textarea" 
-                                placeholder="輸入您的額外要求、特殊指示或創作方向..."></textarea>
                         </div>
 
                         <!-- 自訂提示詞 -->
@@ -755,6 +744,12 @@
                             <label class="form-label">自訂提示詞</label>
                             <textarea id="customPrompt" class="form-textarea auto-resize-textarea" 
                                 placeholder="輸入您的自訂提示詞..."></textarea>
+                        </div>
+                        <!-- 🆕 額外要求輸入框 -->
+                        <div class="form-group">
+                            <label class="form-label">💭 額外要求</label>
+                            <textarea id="additionalRequirements" class="form-textarea auto-resize-textarea" 
+                                placeholder="輸入您的額外要求、特殊指示或創作方向..."></textarea>
                         </div>
 
                         <!-- 操作按鈕 -->
@@ -789,73 +784,6 @@
                             <input type="password" id="newPassword" class="form-input" placeholder="輸入新密碼" />
                             <button class="btn btn-primary" onclick="changePassword()" style="margin-top: 10px;">更新密碼</button>
                         </div>
-                    </div>
-
-                    <!-- 模板設定 -->
-                    <div style="margin-bottom: 30px;">
-                        <h3>📝 預設模板設定</h3>
-                        <div class="form-group">
-                            <label class="form-label">完整故事模板</label>
-                            <textarea id="storyTemplate" class="form-textarea">根據以下素材，創作一個完整的故事：
-
-角色設定：
-{characters}
-
-故事背景：
-{backgrounds}
-
-秘密設定：
-{secrets}
-
-請創作一個引人入勝的故事，注意角色發展和劇情轉折。</textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">角色對話模板</label>
-                            <textarea id="dialogueTemplate" class="form-textarea">基於以下角色設定，創作一段對話：
-
-角色設定：
-{characters}
-
-場景背景：
-{backgrounds}
-
-請創作符合角色性格的自然對話。</textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">場景描述模板</label>
-                            <textarea id="sceneTemplate" class="form-textarea">根據以下背景設定，創作詳細的場景描述：
-
-背景設定：
-{backgrounds}
-
-請創作生動細緻的場景描述。</textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">劇情分析模板</label>
-                            <textarea id="analysisTemplate" class="form-textarea">分析以下故事素材，提供劇情建議：
-
-所有素材：
-{characters}
-{backgrounds}
-{secrets}
-
-請分析這些素材的潛在劇情發展可能性。</textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">DND角色模板</label>
-                            <textarea id="dndTemplate" class="form-textarea">基於以下角色設定，創建一個DND角色：
-
-角色設定：
-{characters}
-
-請包含職業、種族、屬性、背景故事等完整資訊。</textarea>
-                        </div>
-
-                        <button class="btn btn-success" onclick="saveTemplates()">儲存所有模板</button>
                     </div>
 
                     <!-- 備份功能 -->
@@ -1105,6 +1033,61 @@
                 </div>
             `;
         }
+        
+        function provideMaterialData() {
+            const selectedMaterials = getSelectedMaterials();
+            let dataContent = '';
+        
+            // 角色資料
+            if (selectedMaterials.characters.length > 0) {
+                dataContent += '角色設定：\n';
+                selectedMaterials.characters.forEach(c => {
+                    dataContent += `${c.name}:`;
+                    if (c.age) dataContent += ` 年齡${c.age}歲`;
+                    if (c.race) dataContent += ` (${c.race})`;
+                    if (c.appearance) dataContent += `\n  外貌: ${c.appearance}`;
+                    if (c.personality) dataContent += `\n  性格: ${c.personality}`;
+                    if (c.background) dataContent += `\n  背景: ${c.background}`;
+                    if (c.notes) dataContent += `\n  備註: ${c.notes}`;
+                    dataContent += '\n\n';
+                });
+            }
+        
+            // 背景資料
+            if (selectedMaterials.backgrounds.length > 0) {
+                dataContent += '故事背景：\n';
+                selectedMaterials.backgrounds.forEach(b => {
+                    dataContent += `${b.name}:`;
+                    if (b.type) dataContent += ` (${b.type})`;
+                    if (b.description) dataContent += `\n  描述: ${b.description}`;
+                    if (b.rules) dataContent += `\n  規則: ${b.rules}`;
+                    if (b.notes) dataContent += `\n  備註: ${b.notes}`;
+                    dataContent += '\n\n';
+                });
+            }
+        
+            // 秘密設定
+            if (selectedMaterials.secrets.length > 0) {
+                dataContent += '秘密設定：\n';
+                selectedMaterials.secrets.forEach(s => {
+                    dataContent += `${s.title}:`;
+                    if (s.category) dataContent += ` (${s.category})`;
+                    if (s.content) dataContent += `\n  內容: ${s.content}`;
+                    if (s.impact) dataContent += `\n  影響: ${s.impact}`;
+                    dataContent += '\n\n';
+                });
+            }
+        
+            // 如果沒有選擇任何素材
+            if (!dataContent.trim()) {
+                dataContent = '請先選擇要使用的素材（角色、背景或秘密設定）';
+            }
+        
+            // 放入自訂提示詞框
+            document.getElementById('customPrompt').value = dataContent.trim();
+            autoResizeTextarea(document.getElementById('customPrompt'));
+        }
+
 
         function showCharacterForm(id = null) {
             const character = id ? appData.characters.find(c => c.id === id) : {};
@@ -1869,58 +1852,7 @@
             });
         }
 
-        function useTemplate(type) {
-            const templates = {
-                story: appData.settings.templates.story || `根據以下素材，創作一個完整的故事：
-
-角色設定：
-{characters}
-
-故事背景：
-{backgrounds}
-
-秘密設定：
-{secrets}
-
-請創作一個引人入勝的故事，注意角色發展和劇情轉折。`,
-
-                dialogue: appData.settings.templates.dialogue || `基於以下角色設定，創作一段對話：
-
-角色設定：
-{characters}
-
-場景背景：
-{backgrounds}
-
-請創作符合角色性格的自然對話。`,
-
-                scene: appData.settings.templates.scene || `根據以下背景設定，創作詳細的場景描述：
-
-背景設定：
-{backgrounds}
-
-請創作生動細緻的場景描述。`,
-
-                analysis: appData.settings.templates.analysis || `分析以下故事素材，提供劇情建議：
-
-所有素材：
-{characters}
-{backgrounds}
-{secrets}
-
-請分析這些素材的潛在劇情發展可能性。`,
-
-                dnd: appData.settings.templates.dnd || `基於以下角色設定，創建一個DND角色：
-
-角色設定：
-{characters}
-
-請包含職業、種族、屬性、背景故事等完整資訊。`
-            };
-
-            document.getElementById('customPrompt').value = templates[type];
-            autoResizeTextarea(document.getElementById('customPrompt'));
-        }
+       
 
         function generatePrompt() {
             const selectedMaterials = getSelectedMaterials();
@@ -2015,7 +1947,7 @@
         }
 
         function savePromptTemplate() {
-            const prompt = document.getElementById('customPrompt').value;
+            const promptContent = document.getElementById('customPrompt').value;
             const title = prompt('請輸入模板名稱：');
             
             if (title && prompt.trim()) {
@@ -2125,75 +2057,21 @@
         }
 
         function loadTemplates() {
-            // 載入預設模板到設定
+            // 簡化版：只需要基本設定結構
             if (!appData.settings.templates) {
-                appData.settings.templates = {
-                    story: `根據以下素材，創作一個完整的故事：
-
-角色設定：
-{characters}
-
-故事背景：
-{backgrounds}
-
-秘密設定：
-{secrets}
-
-請創作一個引人入勝的故事，注意角色發展和劇情轉折。`,
-                    dialogue: `基於以下角色設定，創作一段對話：
-
-角色設定：
-{characters}
-
-場景背景：
-{backgrounds}
-
-請創作符合角色性格的自然對話。`,
-                    scene: `根據以下背景設定，創作詳細的場景描述：
-
-背景設定：
-{backgrounds}
-
-請創作生動細緻的場景描述。`,
-                    analysis: `分析以下故事素材，提供劇情建議：
-
-所有素材：
-{characters}
-{backgrounds}
-{secrets}
-
-請分析這些素材的潛在劇情發展可能性。`,
-                    dnd: `基於以下角色設定，創建一個DND角色：
-
-角色設定：
-{characters}
-
-請包含職業、種族、屬性、背景故事等完整資訊。`
-                };
+                appData.settings.templates = {};
                 saveData();
             }
-
-            // 更新設定頁面的模板內容
-            if (document.getElementById('storyTemplate')) {
-                document.getElementById('storyTemplate').value = appData.settings.templates.story || '';
-                document.getElementById('dialogueTemplate').value = appData.settings.templates.dialogue || '';
-                document.getElementById('sceneTemplate').value = appData.settings.templates.scene || '';
-                document.getElementById('analysisTemplate').value = appData.settings.templates.analysis || '';
-                document.getElementById('dndTemplate').value = appData.settings.templates.dnd || '';
-            }
+            // 移除模板頁面更新邏輯，因為不再需要
         }
+
 
         function saveTemplates() {
-            appData.settings.templates = {
-                story: document.getElementById('storyTemplate').value,
-                dialogue: document.getElementById('dialogueTemplate').value,
-                scene: document.getElementById('sceneTemplate').value,
-                analysis: document.getElementById('analysisTemplate').value,
-                dnd: document.getElementById('dndTemplate').value
-            };
-            saveData();
-            alert('所有模板已儲存！');
+            // 如果完全不需要模板管理，可以移除這個函數
+            // 或者保留空函數避免錯誤
+            alert('設定已儲存！');
         }
+
 
         function exportData() {
             const dataStr = JSON.stringify(appData, null, 2);
