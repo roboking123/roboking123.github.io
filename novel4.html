@@ -218,33 +218,30 @@
             min-width: 200px;
         }
 
-        .tag-filter {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
         .tag {
             padding: 5px 10px;
             border-radius: 15px;
             font-size: 0.8em;
             cursor: pointer;
             transition: all 0.3s;
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #bbdefb;
         }
-
-        .tag.character { background: #e3f2fd; color: #1976d2; }
-        .tag.main { background: #fff3e0; color: #f57c00; }
-        .tag.support { background: #e8f5e8; color: #388e3c; }
-        .tag.villain { background: #ffebee; color: #d32f2f; }
-        .tag.location { background: #f3e5f5; color: #7b1fa2; }
-        .tag.culture { background: #e0f2f1; color: #00695c; }
-        .tag.plot { background: #fff8e1; color: #f9a825; }
-        .tag.secret { background: #fce4ec; color: #c2185b; }
-
+        
+        .tag:hover {
+            background: #bbdefb;
+            color: #0d47a1;
+        }
+        
         .tag.selected {
             transform: scale(1.1);
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            background: #1976d2;
+            color: white;
+            border-color: #1976d2;
         }
+
 
         /* 資料卡片 */
         .data-grid {
@@ -744,6 +741,13 @@
                                 <button class="btn btn-secondary" onclick="useTemplate('analysis')">劇情分析</button>
                                 <button class="btn btn-secondary" onclick="useTemplate('dnd')">DND角色</button>
                             </div>
+                        </div>
+
+                        <!-- 🆕 額外要求輸入框 -->
+                        <div class="form-group">
+                            <label class="form-label">💭 額外要求</label>
+                            <textarea id="additionalRequirements" class="form-textarea auto-resize-textarea" 
+                                placeholder="輸入您的額外要求、特殊指示或創作方向..."></textarea>
                         </div>
 
                         <!-- 自訂提示詞 -->
@@ -1920,24 +1924,48 @@
 
         function generatePrompt() {
             const selectedMaterials = getSelectedMaterials();
+            const additionalReq = document.getElementById('additionalRequirements').value.trim();
             let prompt = document.getElementById('customPrompt').value;
-
-            // 替換模板變數
-            prompt = prompt.replace('{characters}', selectedMaterials.characters.map(c => 
-                `${c.name}: ${c.personality || ''} ${c.background || ''}`
-            ).join('\n'));
-
-            prompt = prompt.replace('{backgrounds}', selectedMaterials.backgrounds.map(b => 
-                `${b.name}: ${b.description || ''}`
-            ).join('\n'));
-
-            prompt = prompt.replace('{secrets}', selectedMaterials.secrets.map(s => 
-                `${s.title}: ${s.content || ''}`
-            ).join('\n'));
-
+        
+            // 修正角色資訊組合
+            prompt = prompt.replace('{characters}', selectedMaterials.characters.map(c => {
+                let charInfo = `${c.name}:`;
+                if (c.age) charInfo += ` 年齡${c.age}歲`;
+                if (c.race) charInfo += ` (${c.race})`;
+                if (c.appearance) charInfo += `\n  外貌: ${c.appearance}`;
+                if (c.personality) charInfo += `\n  性格: ${c.personality}`;
+                if (c.background) charInfo += `\n  背景: ${c.background}`;
+                if (c.notes) charInfo += `\n  備註: ${c.notes}`;
+                return charInfo;
+            }).join('\n\n'));
+        
+            prompt = prompt.replace('{backgrounds}', selectedMaterials.backgrounds.map(b => {
+                let bgInfo = `${b.name}:`;
+                if (b.type) bgInfo += ` (${b.type})`;
+                if (b.description) bgInfo += `\n  描述: ${b.description}`;
+                if (b.rules) bgInfo += `\n  規則: ${b.rules}`;
+                if (b.notes) bgInfo += `\n  備註: ${b.notes}`;
+                return bgInfo;
+            }).join('\n\n'));
+        
+            prompt = prompt.replace('{secrets}', selectedMaterials.secrets.map(s => {
+                let secretInfo = `${s.title}:`;
+                if (s.category) secretInfo += ` (${s.category})`;
+                if (s.content) secretInfo += `\n  內容: ${s.content}`;
+                if (s.impact) secretInfo += `\n  影響: ${s.impact}`;
+                return secretInfo;
+            }).join('\n\n'));
+        
+            // 🆕 添加額外要求
+            if (additionalReq) {
+                prompt += '\n\n額外要求：\n' + additionalReq;
+            }
+        
             document.getElementById('customPrompt').value = prompt;
             autoResizeTextarea(document.getElementById('customPrompt'));
         }
+
+
 
         function getSelectedMaterials() {
             const selectedItems = document.querySelectorAll('.material-item.selected');
