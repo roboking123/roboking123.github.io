@@ -678,6 +678,21 @@
         .icon-secret { color: #fb923c; }
         .icon-novel { color: #a78bfa; }
         .icon-ai { color: #34d399; }
+
+        /* 在所有CSS的最後面添加這段 */
+        /* 確保輸入框可點擊 */
+        .form-input {
+            pointer-events: auto !important;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+        }
+        
+        /* 修復可能的層級問題 */
+        .card .form-input {
+            position: relative;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
@@ -937,39 +952,41 @@
         }
 
         // 渲染角色列表
-        function renderCharacters(characters) {
-            if (characters.length === 0) {
-                return '<p style="text-align: center; color: var(--text-secondary);">還沒有角色，點擊上方按鈕新增第一個角色！</p>';
-            }
+// 修改角色列表渲染，添加查看功能
+function renderCharacters(characters) {
+    if (characters.length === 0) {
+        return '<p style="text-align: center; color: var(--text-secondary);">還沒有角色，點擊上方按鈕新增第一個角色！</p>';
+    }
 
-            return characters.map(char => `
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <div class="card-title">${char.name}</div>
-                            <div class="card-meta">
-                                ${char.tags.map(tag => {
-                                    let tagClass = '';
-                                    if (tag === '主角') tagClass = 'tag-hero';
-                                    else if (tag === '反派') tagClass = 'tag-villain';
-                                    else if (tag === '配角') tagClass = 'tag-support';
-                                    return `<span class="tag ${tagClass}">${tag}</span>`;
-                                }).join('')}
-                                <span style="color: var(--text-secondary);">年齡: ${char.age || '未知'}</span>
-                                <span style="color: var(--text-secondary);">種族: ${char.race || '人類'}</span>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <button class="btn btn-secondary" onclick="editCharacter('${char.id}')">編輯</button>
-                            <button class="btn btn-danger" onclick="deleteItem('characters', '${char.id}')">刪除</button>
-                        </div>
-                    </div>
-                    <div style="color: var(--text-secondary); margin-top: 0.5rem;">
-                        ${char.description ? char.description.substring(0, 100) + '...' : '沒有描述'}
+    return characters.map(char => `
+        <div class="card" style="cursor: pointer;" onclick="viewCharacter('${char.id}')">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">${char.name}</div>
+                    <div class="card-meta">
+                        ${char.tags.map(tag => {
+                            let tagClass = '';
+                            if (tag === '主角') tagClass = 'tag-hero';
+                            else if (tag === '反派') tagClass = 'tag-villain';
+                            else if (tag === '配角') tagClass = 'tag-support';
+                            return `<span class="tag ${tagClass}">${tag}</span>`;
+                        }).join('')}
+                        <span style="color: var(--text-secondary);">年齡: ${char.age || '未知'}</span>
+                        <span style="color: var(--text-secondary);">種族: ${char.race || '人類'}</span>
                     </div>
                 </div>
-            `).join('');
-        }
+                <div style="display: flex; gap: 0.5rem;" onclick="event.stopPropagation();">
+                    <button class="btn btn-secondary" onclick="editCharacter('${char.id}')">編輯</button>
+                    <button class="btn btn-danger" onclick="deleteItem('characters', '${char.id}')">刪除</button>
+                </div>
+            </div>
+            <div style="color: var(--text-secondary); margin-top: 0.5rem;">
+                ${char.description ? char.description.substring(0, 100) + '...' : '沒有描述'}
+            </div>
+        </div>
+    `).join('');
+}
+
 
         // 編輯角色
         function editCharacter(id = null) {
@@ -1139,6 +1156,89 @@
                 </div>
             `;
         }
+
+        // 查看角色詳情
+function viewCharacter(id) {
+    const character = data.characters.find(c => c.id === id);
+    if (!character) return;
+
+    document.getElementById('pageContent').innerHTML = `
+        <div class="edit-page">
+            <div class="edit-header">
+                <h1 class="page-title">👤 ${character.name}</h1>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-secondary" onclick="editCharacter('${character.id}')">編輯</button>
+                    <button class="btn btn-secondary" onclick="showCharacters()">返回</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>基本資訊</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                    <div><strong>年齡：</strong>${character.age || '未知'}</div>
+                    <div><strong>種族：</strong>${character.race || '人類'}</div>
+                    <div><strong>髮色：</strong>${character.appearance.hair || '未設定'}</div>
+                    <div><strong>眼色：</strong>${character.appearance.eyes || '未設定'}</div>
+                </div>
+            </div>
+
+            ${character.description ? `
+                <div class="card">
+                    <h3>外貌描述</h3>
+                    <p style="margin-top: 1rem; white-space: pre-wrap; line-height: 1.6;">${character.description}</p>
+                </div>
+            ` : ''}
+
+            ${character.personality ? `
+                <div class="card">
+                    <h3>性格特質</h3>
+                    <p style="margin-top: 1rem; white-space: pre-wrap; line-height: 1.6;">${character.personality}</p>
+                </div>
+            ` : ''}
+
+            ${character.background ? `
+                <div class="card">
+                    <h3>背景故事</h3>
+                    <p style="margin-top: 1rem; white-space: pre-wrap; line-height: 1.6;">${character.background}</p>
+                </div>
+            ` : ''}
+
+            ${character.notes ? `
+                <div class="card">
+                    <h3>備註</h3>
+                    <p style="margin-top: 1rem; white-space: pre-wrap; line-height: 1.6;">${character.notes}</p>
+                </div>
+            ` : ''}
+
+            ${character.tags && character.tags.length > 0 ? `
+                <div class="card">
+                    <h3>標籤</h3>
+                    <div class="card-meta" style="margin-top: 1rem;">
+                        ${character.tags.map(tag => {
+                            let tagClass = '';
+                            if (tag === '主角') tagClass = 'tag-hero';
+                            else if (tag === '反派') tagClass = 'tag-villain';
+                            else if (tag === '配角') tagClass = 'tag-support';
+                            return `<span class="tag ${tagClass}">${tag}</span>`;
+                        }).join('')}
+                    </div>
+                </div>
+            ` : ''}
+
+            <div class="card">
+                <h3>建立資訊</h3>
+                <div style="margin-top: 1rem;">
+                    <div><strong>建立時間：</strong>${new Date(character.createdAt).toLocaleString()}</div>
+                    <div style="margin-top: 0.5rem;"><strong>最後更新：</strong>${new Date(character.updatedAt).toLocaleString()}</div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+
+
+        
 
         // 渲染背景列表
         function renderBackgrounds(backgrounds) {
