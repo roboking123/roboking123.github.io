@@ -146,15 +146,6 @@
             background: #c0392b;
         }
 
-        .btn-info {
-            background: #3498db;
-            color: white;
-        }
-
-        .btn-info:hover {
-            background: #2980b9;
-        }
-
         .search-container {
             margin-bottom: 20px;
         }
@@ -187,9 +178,6 @@
             border: 1px solid #ecf0f1;
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            height: 200px; /* 固定卡片高度 */
-            display: flex;
-            flex-direction: column;
         }
 
         .item-card:hover {
@@ -205,17 +193,16 @@
             margin-bottom: 10px;
         }
 
-        .item-content {
+        /* 固定預覽行數 */
+        .item-content-preview {
             color: #5a6c7d;
             line-height: 1.6;
             margin-bottom: 15px;
-            flex: 1;
-            /* 限制預覽內容為3行 */
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            text-overflow: ellipsis;
+            height: 4.8em; /* 固定高度為3行 */
         }
 
         .item-meta {
@@ -224,7 +211,6 @@
             align-items: center;
             font-size: 0.9em;
             color: #7f8c8d;
-            margin-top: auto;
         }
 
         .item-actions {
@@ -237,16 +223,112 @@
             font-size: 14px;
         }
 
-        .search-container {
-            margin-bottom: 20px;
+        /* 新分頁樣式 */
+        .page-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f8f9fa;
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .page-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 1.5em;
+            font-weight: 500;
+        }
+
+        .close-page {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .close-page:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .page-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
+            background: #ffffff;
+            resize: none;
+        }
+
+        .form-textarea {
+            min-height: 300px;
+            line-height: 1.6;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #34495e;
+            box-shadow: 0 0 0 2px rgba(52, 73, 94, 0.1);
+        }
+
+        .view-content {
+            background: #fafbfc;
+            border: 1px solid #ecf0f1;
+            border-radius: 6px;
+            padding: 20px;
+            line-height: 1.8;
+            font-size: 16px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
         .selection-container {
-            max-height: none; /* 移除滾輪限制 */
             border: 1px solid #ecf0f1;
             border-radius: 6px;
             padding: 15px;
             background: #fafbfc;
+            max-height: 400px;
+            overflow-y: auto;
         }
 
         .selection-header {
@@ -260,7 +342,7 @@
         .selection-item {
             display: flex;
             align-items: center;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 8px;
             background: #ffffff;
             border-radius: 4px;
@@ -268,8 +350,8 @@
         }
 
         .selection-item input[type="checkbox"] {
-            margin-right: 10px;
-            transform: scale(1.2);
+            margin-right: 12px;
+            transform: scale(1.3);
             accent-color: #34495e;
         }
 
@@ -277,6 +359,7 @@
             cursor: pointer;
             flex: 1;
             color: #2c3e50;
+            font-size: 15px;
         }
 
         .stats-grid {
@@ -351,76 +434,24 @@
             font-weight: 500;
         }
 
-        /* 新頁面樣式 */
-        .page-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: white;
-            min-height: 100vh;
-        }
-
-        .page-header {
-            background: #34495e;
-            color: white;
-            padding: 20px;
-            margin: -20px -20px 30px -20px;
-            border-radius: 0;
-        }
-
-        .page-title {
-            font-size: 2em;
-            margin-bottom: 10px;
-            font-weight: 300;
-        }
-
-        .form-group {
+        .novel-material {
             margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #2c3e50;
-        }
-
-        .form-input, .form-textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #bdc3c7;
-            border-radius: 6px;
-            font-size: 16px;
-            font-family: inherit;
-            background: #ffffff;
-        }
-
-        .form-textarea {
-            min-height: 200px;
-            resize: vertical;
-        }
-
-        .form-input:focus, .form-textarea:focus {
-            outline: none;
-            border-color: #34495e;
-            box-shadow: 0 0 0 2px rgba(52, 73, 94, 0.1);
-        }
-
-        .page-actions {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ecf0f1;
-        }
-
-        .view-content {
+            padding: 15px;
             background: #fafbfc;
-            padding: 20px;
             border-radius: 6px;
             border: 1px solid #ecf0f1;
-            line-height: 1.8;
-            white-space: pre-wrap;
+        }
+
+        .material-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .material-content {
+            color: #5a6c7d;
+            line-height: 1.6;
         }
 
         @media (max-width: 768px) {
@@ -458,8 +489,12 @@
                 flex-direction: column;
             }
 
-            .page-container {
-                padding: 10px;
+            .page-body {
+                padding: 20px;
+            }
+
+            .page-header {
+                padding: 15px 20px;
             }
         }
     </style>
@@ -483,7 +518,7 @@
             <!-- 角色設定 -->
             <div id="characters" class="section active">
                 <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="openNewPage('add', 'characters')">➕ 新增角色</button>
+                    <button class="btn btn-primary" onclick="openAddPage('characters')">➕ 新增角色</button>
                 </div>
                 
                 <div class="search-container">
@@ -498,7 +533,7 @@
             <!-- 故事背景 -->
             <div id="backgrounds" class="section">
                 <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="openNewPage('add', 'backgrounds')">➕ 新增背景</button>
+                    <button class="btn btn-primary" onclick="openAddPage('backgrounds')">➕ 新增背景</button>
                 </div>
                 
                 <div class="search-container">
@@ -513,7 +548,7 @@
             <!-- 秘密設定 -->
             <div id="secrets" class="section">
                 <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="openNewPage('add', 'secrets')">➕ 新增秘密</button>
+                    <button class="btn btn-primary" onclick="openAddPage('secrets')">➕ 新增秘密</button>
                 </div>
                 
                 <div class="search-container">
@@ -528,7 +563,7 @@
             <!-- 小說管理 -->
             <div id="novels" class="section">
                 <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="openNewPage('add', 'novels')">➕ 新增小說</button>
+                    <button class="btn btn-primary" onclick="openNovelPage()">➕ 新增小說</button>
                 </div>
                 
                 <div class="search-container">
@@ -581,7 +616,7 @@
                     <div class="action-buttons">
                         <button class="btn btn-primary" onclick="connectGitHub()">連接 GitHub</button>
                         <button class="btn btn-secondary" onclick="syncToGitHub()">上傳同步</button>
-                        <button class="btn btn-info" onclick="syncFromGitHub()">下載同步</button>
+                        <button class="btn btn-success" onclick="syncFromGitHub()">下載同步</button>
                     </div>
                 </div>
 
@@ -605,9 +640,146 @@
         </div>
     </div>
 
+    <!-- 新增/編輯分頁 -->
+    <div id="editPage" class="page-overlay">
+        <div class="page-content">
+            <div class="page-header">
+                <h2 class="page-title" id="edit-page-title">新增項目</h2>
+                <button class="close-page" onclick="closePage()">&times;</button>
+            </div>
+            <div class="page-body">
+                <form id="edit-form">
+                    <div class="form-group">
+                        <label class="form-label">標題:</label>
+                        <input type="text" class="form-input" id="edit-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">內容:</label>
+                        <textarea class="form-textarea" id="edit-content" required></textarea>
+                    </div>
+                    <div class="action-buttons">
+                        <button type="submit" class="btn btn-primary">保存</button>
+                        <button type="button" class="btn btn-secondary" onclick="closePage()">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 查看分頁 -->
+    <div id="viewPage" class="page-overlay">
+        <div class="page-content">
+            <div class="page-header">
+                <h2 class="page-title" id="view-page-title">查看項目</h2>
+                <button class="close-page" onclick="closePage()">&times;</button>
+            </div>
+            <div class="page-body">
+                <div class="form-group">
+                    <label class="form-label">標題:</label>
+                    <div class="view-content" id="view-title"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">內容:</label>
+                    <div class="view-content" id="view-content"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">創建時間:</label>
+                    <div class="view-content" id="view-created"></div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="closePage()">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 小說新增分頁 -->
+    <div id="novelPage" class="page-overlay">
+        <div class="page-content">
+            <div class="page-header">
+                <h2 class="page-title">📖 新增小說</h2>
+                <button class="close-page" onclick="closePage()">&times;</button>
+            </div>
+            <div class="page-body">
+                <form id="novel-form">
+                    <div class="form-group">
+                        <label class="form-label">小說標題:</label>
+                        <input type="text" class="form-input" id="novel-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">簡介:</label>
+                        <textarea class="form-textarea" id="novel-description" style="min-height: 150px;"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">選擇角色:</label>
+                        <div class="selection-count" id="characters-count">已選擇: 0 個角色</div>
+                        <div class="selection-container">
+                            <div class="selection-header">
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="selectAll('novel-characters')">全選</button>
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="deselectAll('novel-characters')">全部取消</button>
+                            </div>
+                            <div id="novel-characters">
+                                <!-- 角色選擇項目將在這里動態生成 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">選擇背景:</label>
+                        <div class="selection-count" id="backgrounds-count">已選擇: 0 個背景</div>
+                        <div class="selection-container">
+                            <div class="selection-header">
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="selectAll('novel-backgrounds')">全選</button>
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="deselectAll('novel-backgrounds')">全部取消</button>
+                            </div>
+                            <div id="novel-backgrounds">
+                                <!-- 背景選擇項目將在這里動態生成 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">選擇秘密:</label>
+                        <div class="selection-count" id="secrets-count">已選擇: 0 個秘密</div>
+                        <div class="selection-container">
+                            <div class="selection-header">
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="selectAll('novel-secrets')">全選</button>
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="deselectAll('novel-secrets')">全部取消</button>
+                            </div>
+                            <div id="novel-secrets">
+                                <!-- 秘密選擇項目將在這里動態生成 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="submit" class="btn btn-primary">創建小說</button>
+                        <button type="button" class="btn btn-secondary" onclick="closePage()">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 小說查看分頁 -->
+    <div id="novelViewPage" class="page-overlay">
+        <div class="page-content">
+            <div class="page-header">
+                <h2 class="page-title" id="novel-view-title">查看小說</h2>
+                <button class="close-page" onclick="closePage()">&times;</button>
+            </div>
+            <div class="page-body" id="novel-view-content">
+                <!-- 小說詳情將在這里動態生成 -->
+            </div>
+        </div>
+    </div>
+
     <script>
         // 全域變數
         let currentSection = 'characters';
+        let currentEditType = '';
+        let editingId = null;
         
         // 資料存儲
         let data = {
@@ -731,350 +903,25 @@
             }
         }
 
-        // 創建項目卡片
+        // 創建項目卡片 - 固定預覽行數
         function createItemCard(item, type, index) {
             const card = document.createElement('div');
             card.className = 'item-card';
             
-            // 限制預覽內容長度
-            let contentPreview = item.content;
-            if (contentPreview.length > 100) {
-                contentPreview = contentPreview.substring(0, 100) + '...';
-            }
-            
             card.innerHTML = `
                 <div class="item-title">${item.title}</div>
-                <div class="item-content">${contentPreview}</div>
+                <div class="item-content-preview">${item.content}</div>
                 <div class="item-meta">
                     <span>創建時間: ${new Date(item.createdAt).toLocaleDateString()}</span>
                     <div class="item-actions">
-                        <button class="btn btn-sm btn-info" onclick="openNewPage('view', '${type}', ${index})">查看</button>
-                        <button class="btn btn-sm btn-secondary" onclick="openNewPage('edit', '${type}', ${index})">編輯</button>
+                        <button class="btn btn-sm btn-primary" onclick="viewItem('${type}', ${index})">查看</button>
+                        <button class="btn btn-sm btn-secondary" onclick="editItem('${type}', ${index})">編輯</button>
                         <button class="btn btn-sm btn-danger" onclick="deleteItem('${type}', ${index})">刪除</button>
                     </div>
                 </div>
             `;
             
             return card;
-        }
-
-        // 開啟新頁面
-        function openNewPage(action, type, index = null) {
-            const params = new URLSearchParams();
-            params.append('action', action);
-            params.append('type', type);
-            if (index !== null) {
-                params.append('index', index);
-            }
-            
-            // 將當前資料保存到 sessionStorage 以供新頁面使用
-            sessionStorage.setItem('novelMaterialsTemp', JSON.stringify(data));
-            
-            const newWindow = window.open(`data:text/html;charset=utf-8,${encodeURIComponent(generatePageHTML(action, type, index))}`, '_blank');
-            if (!newWindow) {
-                alert('請允許彈出視窗以開啟新頁面');
-            }
-        }
-
-        // 生成新頁面 HTML
-        function generatePageHTML(action, type, index) {
-            let item = null;
-            if (index !== null && data[type] && data[type][index]) {
-                item = data[type][index];
-            }
-
-            const typeNames = {
-                'characters': '角色',
-                'backgrounds': '背景',
-                'secrets': '秘密',
-                'novels': '小說'
-            };
-
-            const typeName = typeNames[type] || type;
-            const actionName = action === 'add' ? '新增' : action === 'edit' ? '編輯' : '查看';
-
-            return `
-            
-
-
-        // 生成頁面內容
-        function generatePageContent(action, type, item) {
-            if (action === 'view') {
-                return `
-                    <div class="form-group">
-                        <label class="form-label">標題:</label>
-                        <div class="view-content">${item ? item.title : ''}</div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">內容:</label>
-                        <div class="view-content">${item ? item.content : ''}</div>
-                    </div>
-                `;
-            } else if (type === 'novels') {
-                return `
-                    <div class="form-group">
-                        <label class="form-label">小說標題:</label>
-                        <input type="text" class="form-input" id="novel-title" value="${item ? item.title : ''}" ${action === 'view' ? 'readonly' : ''}>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">簡介:</label>
-                        <textarea class="form-textarea" id="novel-description" ${action === 'view' ? 'readonly' : ''}>${item ? item.description : ''}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">選擇角色:</label>
-                        <div class="selection-count" id="characters-count">已選擇: 0 個角色</div>
-                        <div class="selection-container">
-                            <div class="selection-header">
-                                <button type="button" class="btn btn-sm btn-secondary" onclick="selectAll('novel-characters')">全選</button>
-                                <button type="button" class="btn btn-sm btn-secondary" onclick="deselectAll('novel-characters')">全部取消</button>
-                            </div>
-                            <div id="novel-characters">
-                                <!-- 角色選擇項目將在這里動態生成 -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">選擇背景:</label>
-                        <div class="selection-count" id="backgrounds-count">已選擇: 0 個背景</div>
-                        <div class="selection-container">
-                            <div class="selection-header">
-                                <button type="button" class="btn btn-sm btn-secondary" onclick="selectAll('novel-backgrounds')">全選</button>
-                                <button type="button" class="btn btn-sm btn-secondary" onclick="deselectAll('novel-backgrounds')">全部取消</button>
-                            </div>
-                            <div id="novel-backgrounds">
-                                <!-- 背景選擇項目將在這里動態生成 -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">選擇秘密:</label>
-                        <div class="selection-count" id="secrets-count">已選擇: 0 個秘密</div>
-                        <div class="selection-container">
-                            <div class="selection-header">
-                                <button type="button" class="btn btn-sm btn-secondary" onclick="selectAll('novel-secrets')">全選</button>
-                                <button type="button" class="btn btn-sm btn-secondary" onclick="deselectAll('novel-secrets')">全部取消</button>
-                            </div>
-                            <div id="novel-secrets">
-                                <!-- 秘密選擇項目將在這里動態生成 -->
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                return `
-                    <div class="form-group">
-                        <label class="form-label">標題:</label>
-                        <input type="text" class="form-input" id="item-title" value="${item ? item.title : ''}" ${action === 'view' ? 'readonly' : ''}>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">內容:</label>
-                        <textarea class="form-textarea" id="item-content" ${action === 'view' ? 'readonly' : ''}>${item ? item.content : ''}</textarea>
-                    </div>
-                `;
-            }
-        }
-
-        // 生成頁面動作按鈕
-        function generatePageActions(action) {
-            if (action === 'view') {
-                return `
-                    <button class="btn btn-secondary" onclick="window.close()">關閉</button>
-                `;
-            } else {
-                return `
-                    <button class="btn btn-primary" onclick="saveItem()">${action === 'add' ? '保存' : '更新'}</button>
-                    <button class="btn btn-secondary" onclick="window.close()">取消</button>
-                `;
-            }
-        }
-
-        // 生成頁面腳本
-        function generatePageScript(action, type, index) {
-            return `
-                function saveItem() {
-                    if ('${type}' === 'novels') {
-                        saveNovel();
-                    } else {
-                        saveBasicItem();
-                    }
-                }
-
-                function saveBasicItem() {
-                    const title = document.getElementById('item-title').value.trim();
-                    const content = document.getElementById('item-content').value.trim();
-                    
-                    if (!title || !content) {
-                        alert('請填寫所有必填欄位');
-                        return;
-                    }
-                    
-                    const item = {
-                        title: title,
-                        content: content,
-                        createdAt: ${index !== null ? `'${data[type] && data[type][index] ? data[type][index].createdAt : new Date().toISOString()}'` : 'new Date().toISOString()'},
-                        updatedAt: new Date().toISOString()
-                    };
-                    
-                    if ('${action}' === 'edit') {
-                        data['${type}'][${index}] = item;
-                    } else {
-                        data['${type}'].push(item);
-                    }
-                    
-                    // 保存回主視窗
-                    window.opener.updateData(data);
-                    window.close();
-                }
-
-                function saveNovel() {
-                    const title = document.getElementById('novel-title').value.trim();
-                    const description = document.getElementById('novel-description').value.trim();
-                    
-                    if (!title) {
-                        alert('請填寫小說標題');
-                        return;
-                    }
-                    
-                    const selectedCharacters = getSelectedItems('novel-characters');
-                    const selectedBackgrounds = getSelectedItems('novel-backgrounds');
-                    const selectedSecrets = getSelectedItems('novel-secrets');
-                    
-                    const novel = {
-                        title: title,
-                        description: description,
-                        characters: selectedCharacters,
-                        backgrounds: selectedBackgrounds,
-                        secrets: selectedSecrets,
-                        createdAt: ${index !== null ? `'${data.novels && data.novels[index] ? data.novels[index].createdAt : new Date().toISOString()}'` : 'new Date().toISOString()'},
-                        updatedAt: new Date().toISOString()
-                    };
-                    
-                    if ('${action}' === 'edit') {
-                        data.novels[${index}] = novel;
-                    } else {
-                        data.novels.push(novel);
-                    }
-                    
-                    window.opener.updateData(data);
-                    window.close();
-                }
-
-                function getSelectedItems(containerId) {
-                    const container = document.getElementById(containerId);
-                    const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
-                    const selected = [];
-                    
-                    checkboxes.forEach(checkbox => {
-                        const label = container.querySelector(\`label[for="\${checkbox.id}"]\`);
-                        const index = parseInt(checkbox.id.split('-')[1]);
-                        const type = checkbox.id.split('-')[0];
-                        
-                        selected.push({
-                            title: label.textContent,
-                            content: data[type][index].content
-                        });
-                    });
-                    
-                    return selected;
-                }
-
-                function selectAll(containerId) {
-                    const container = document.getElementById(containerId);
-                    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-                    checkboxes.forEach(checkbox => checkbox.checked = true);
-                    
-                    const type = containerId.replace('novel-', '');
-                    updateSelectionCount(type);
-                }
-
-                function deselectAll(containerId) {
-                    const container = document.getElementById(containerId);
-                    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-                    checkboxes.forEach(checkbox => checkbox.checked = false);
-                    
-                    const type = containerId.replace('novel-', '');
-                    updateSelectionCount(type);
-                }
-
-                function updateSelectionCount(type) {
-                    const container = document.getElementById(\`novel-\${type}\`);
-                    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-                    const checkedCount = container.querySelectorAll('input[type="checkbox"]:checked').length;
-                    
-                    const countElement = document.getElementById(\`\${type}-count\`);
-                    const typeNames = {
-                        'characters': '角色',
-                        'backgrounds': '背景',
-                        'secrets': '秘密'
-                    };
-                    countElement.textContent = \`已選擇: \${checkedCount} 個\${typeNames[type]}\`;
-                }
-
-                function renderSelection(containerId, items, type) {
-                    const container = document.getElementById(containerId);
-                    container.innerHTML = '';
-                    
-                    items.forEach((item, index) => {
-                        const div = document.createElement('div');
-                        div.className = 'selection-item';
-                        div.innerHTML = \`
-                            <input type="checkbox" id="\${type}-\${index}" onchange="updateSelectionCount('\${type}')">
-                            <label for="\${type}-\${index}">\${item.title}</label>
-                        \`;
-                        container.appendChild(div);
-                    });
-                    
-                    updateSelectionCount(type);
-                }
-
-                // 如果是小說相關頁面，初始化選擇項目
-                if ('${type}' === 'novels') {
-                    renderSelection('novel-characters', data.characters, 'characters');
-                    renderSelection('novel-backgrounds', data.backgrounds, 'backgrounds');
-                    renderSelection('novel-secrets', data.secrets, 'secrets');
-                    
-                    // 如果是編輯模式，預選已選擇的項目
-                    if ('${action}' === 'edit' && ${index !== null}) {
-                        const novel = data.novels[${index}];
-                        if (novel) {
-                            // 預選角色
-                            novel.characters.forEach(char => {
-                                const charIndex = data.characters.findIndex(c => c.title === char.title);
-                                if (charIndex !== -1) {
-                                    document.getElementById(\`characters-\${charIndex}\`).checked = true;
-                                }
-                            });
-                            
-                            // 預選背景
-                            novel.backgrounds.forEach(bg => {
-                                const bgIndex = data.backgrounds.findIndex(b => b.title === bg.title);
-                                if (bgIndex !== -1) {
-                                    document.getElementById(\`backgrounds-\${bgIndex}\`).checked = true;
-                                }
-                            });
-                            
-                            // 預選秘密
-                            novel.secrets.forEach(secret => {
-                                const secretIndex = data.secrets.findIndex(s => s.title === secret.title);
-                                if (secretIndex !== -1) {
-                                    document.getElementById(\`secrets-\${secretIndex}\`).checked = true;
-                                }
-                            });
-                            
-                            updateSelectionCount('characters');
-                            updateSelectionCount('backgrounds');
-                            updateSelectionCount('secrets');
-                        }
-                    }
-                }
-            `;
-        }
-
-        // 更新資料（從子視窗呼叫）
-        function updateData(newData) {
-            data = newData;
-            saveData();
-            renderAllSections();
         }
 
         // 搜尋功能
@@ -1084,7 +931,7 @@
             
             cards.forEach(card => {
                 const title = card.querySelector('.item-title').textContent.toLowerCase();
-                const content = card.querySelector('.item-content').textContent.toLowerCase();
+                const content = card.querySelector('.item-content-preview').textContent.toLowerCase();
                 
                 if (title.includes(searchTerm) || content.includes(searchTerm)) {
                     card.style.display = 'block';
@@ -1092,6 +939,46 @@
                     card.style.display = 'none';
                 }
             });
+        }
+
+        // 開啟新增分頁
+        function openAddPage(type) {
+            currentEditType = type;
+            editingId = null;
+            
+            document.getElementById('edit-page-title').textContent = `新增${getTypeName(type)}`;
+            document.getElementById('edit-title').value = '';
+            document.getElementById('edit-content').value = '';
+            
+            document.getElementById('editPage').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 編輯項目
+        function editItem(type, index) {
+            currentEditType = type;
+            editingId = index;
+            
+            const item = data[type][index];
+            document.getElementById('edit-page-title').textContent = `編輯${getTypeName(type)}`;
+            document.getElementById('edit-title').value = item.title;
+            document.getElementById('edit-content').value = item.content;
+            
+            document.getElementById('editPage').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 查看項目
+        function viewItem(type, index) {
+            const item = data[type][index];
+            
+            document.getElementById('view-page-title').textContent = `查看${getTypeName(type)}`;
+            document.getElementById('view-title').textContent = item.title;
+            document.getElementById('view-content').textContent = item.content;
+            document.getElementById('view-created').textContent = new Date(item.createdAt).toLocaleString();
+            
+            document.getElementById('viewPage').style.display = 'block';
+            document.body.style.overflow = 'hidden';
         }
 
         // 刪除項目
@@ -1104,33 +991,252 @@
             }
         }
 
+        // 關閉分頁
+        function closePage() {
+            document.querySelectorAll('.page-overlay').forEach(page => {
+                page.style.display = 'none';
+            });
+            document.body.style.overflow = 'auto';
+        }
+
+        // 編輯表單提交
+        document.getElementById('edit-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('edit-title').value.trim();
+            const content = document.getElementById('edit-content').value.trim();
+            
+            if (!title) {
+                alert('請填寫標題');
+                return;
+            }
+            
+            if (!content) {
+                alert('請填寫內容');
+                return;
+            }
+            
+            const item = {
+                title: title,
+                content: content,
+                createdAt: editingId !== null ? data[currentEditType][editingId].createdAt : new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            if (editingId !== null) {
+                data[currentEditType][editingId] = item;
+                addSyncLog(`更新了${getTypeName(currentEditType)}: ${title}`);
+            } else {
+                data[currentEditType].push(item);
+                addSyncLog(`新增了${getTypeName(currentEditType)}: ${title}`);
+            }
+            
+            saveData();
+            renderSection(currentEditType);
+            closePage();
+        });
+
+        // 開啟小說分頁
+        function openNovelPage() {
+            document.getElementById('novel-title').value = '';
+            document.getElementById('novel-description').value = '';
+            
+            renderNovelSelections();
+            document.getElementById('novelPage').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 渲染小說選擇項目
+        function renderNovelSelections() {
+            renderSelection('novel-characters', data.characters, 'characters');
+            renderSelection('novel-backgrounds', data.backgrounds, 'backgrounds');
+            renderSelection('novel-secrets', data.secrets, 'secrets');
+        }
+
+        // 渲染選擇項目
+        function renderSelection(containerId, items, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'selection-item';
+                div.innerHTML = `
+                    <input type="checkbox" id="${type}-${index}" onchange="updateSelectionCount('${type}')">
+                    <label for="${type}-${index}">${item.title}</label>
+                `;
+                container.appendChild(div);
+            });
+            
+            updateSelectionCount(type);
+        }
+
+        // 全選功能
+        function selectAll(containerId) {
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = true);
+            
+            const type = containerId.replace('novel-', '');
+            updateSelectionCount(type);
+        }
+
+        // 全部取消功能
+        function deselectAll(containerId) {
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+            
+            const type = containerId.replace('novel-', '');
+            updateSelectionCount(type);
+        }
+
+        // 更新選擇計數
+        function updateSelectionCount(type) {
+            const container = document.getElementById(`novel-${type}`);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            const checkedCount = container.querySelectorAll('input[type="checkbox"]:checked').length;
+            
+            const countElement = document.getElementById(`${type}-count`);
+            countElement.textContent = `已選擇: ${checkedCount} 個${getTypeName(type.slice(0, -1))}`;
+        }
+
+        // 小說表單提交
+        document.getElementById('novel-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('novel-title').value.trim();
+            const description = document.getElementById('novel-description').value.trim();
+            
+            if (!title) {
+                alert('請填寫小說標題');
+                return;
+            }
+            
+            const selectedCharacters = getSelectedItems('novel-characters');
+            const selectedBackgrounds = getSelectedItems('novel-backgrounds');
+            const selectedSecrets = getSelectedItems('novel-secrets');
+            
+            const novel = {
+                title: title,
+                description: description,
+                characters: selectedCharacters,
+                backgrounds: selectedBackgrounds,
+                secrets: selectedSecrets,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            data.novels.push(novel);
+            saveData();
+            renderSection('novels');
+            closePage();
+            addSyncLog(`創建了小說: ${title}`);
+        });
+
+        // 獲取選中的項目
+        function getSelectedItems(containerId) {
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
+            const selected = [];
+            
+            checkboxes.forEach(checkbox => {
+                const label = container.querySelector(`label[for="${checkbox.id}"]`);
+                const index = parseInt(checkbox.id.split('-')[1]);
+                const type = checkbox.id.split('-')[0];
+                
+                selected.push({
+                    title: label.textContent,
+                    content: data[type][index].content
+                });
+            });
+            
+            return selected;
+        }
+
         // 創建小說卡片
         function createNovelCard(novel, index) {
             const card = document.createElement('div');
             card.className = 'item-card';
             
-            // 限制描述預覽長度
-            let descriptionPreview = novel.description || '';
-            if (descriptionPreview.length > 60) {
-                descriptionPreview = descriptionPreview.substring(0, 60) + '...';
-            }
-            
-            const materialsInfo = `角色:${novel.characters.length} 背景:${novel.backgrounds.length} 秘密:${novel.secrets.length}`;
+            const materialsInfo = `角色: ${novel.characters.length} 個 | 背景: ${novel.backgrounds.length} 個 | 秘密: ${novel.secrets.length} 個`;
             
             card.innerHTML = `
                 <div class="item-title">${novel.title}</div>
-                <div class="item-content">${descriptionPreview}<br><small>${materialsInfo}</small></div>
+                <div class="item-content-preview">${novel.description || '暫無簡介'}</div>
+                <div class="item-content-preview" style="font-size: 0.9em; color: #7f8c8d;">${materialsInfo}</div>
                 <div class="item-meta">
                     <span>創建時間: ${new Date(novel.createdAt).toLocaleDateString()}</span>
                     <div class="item-actions">
-                        <button class="btn btn-sm btn-info" onclick="openNewPage('view', 'novels', ${index})">查看</button>
-                        <button class="btn btn-sm btn-secondary" onclick="openNewPage('edit', 'novels', ${index})">編輯</button>
+                        <button class="btn btn-sm btn-primary" onclick="viewNovel(${index})">查看</button>
                         <button class="btn btn-sm btn-danger" onclick="deleteItem('novels', ${index})">刪除</button>
                     </div>
                 </div>
             `;
             
             return card;
+        }
+
+        // 查看小說詳情
+        function viewNovel(index) {
+            const novel = data.novels[index];
+            
+            document.getElementById('novel-view-title').textContent = novel.title;
+            
+            let content = `
+                <div class="form-group">
+                    <label class="form-label">小說標題:</label>
+                    <div class="view-content">${novel.title}</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">簡介:</label>
+                    <div class="view-content">${novel.description || '暫無簡介'}</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">創建時間:</label>
+                    <div class="view-content">${new Date(novel.createdAt).toLocaleString()}</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">角色 (${novel.characters.length}個):</label>
+                    ${novel.characters.map(char => `
+                        <div class="novel-material">
+                            <div class="material-title">${char.title}</div>
+                            <div class="material-content">${char.content}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">背景 (${novel.backgrounds.length}個):</label>
+                    ${novel.backgrounds.map(bg => `
+                        <div class="novel-material">
+                            <div class="material-title">${bg.title}</div>
+                            <div class="material-content">${bg.content}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">秘密 (${novel.secrets.length}個):</label>
+                    ${novel.secrets.map(secret => `
+                        <div class="novel-material">
+                            <div class="material-title">${secret.title}</div>
+                            <div class="material-content">${secret.content}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="closePage()">關閉</button>
+                </div>
+            `;
+            
+            document.getElementById('novel-view-content').innerHTML = content;
+            document.getElementById('novelViewPage').style.display = 'block';
+            document.body.style.overflow = 'hidden';
         }
 
         // 更新統計
@@ -1174,7 +1280,7 @@
             }
         }
 
-        // 上傳同步到 GitHub
+        // 同步上傳到 GitHub
         async function syncToGitHub() {
             if (!githubConfig.connected) {
                 alert('請先連接 GitHub');
@@ -1192,6 +1298,7 @@
                 const jsonString = JSON.stringify(backupData, null, 2);
                 const base64Content = btoa(unescape(encodeURIComponent(jsonString)));
                 
+                // 檢查檔案是否已存在
                 let sha = null;
                 try {
                     const checkResponse = await fetch(`https://api.github.com/repos/${githubConfig.repo}/contents/novel-materials-backup.json`, {
@@ -1227,7 +1334,6 @@
                 });
                 
                 if (response.ok) {
-                    const result = await response.json();
                     addSyncLog('上傳同步到 GitHub 成功');
                 } else {
                     const errorData = await response.json();
@@ -1240,7 +1346,7 @@
             }
         }
 
-        // 下載同步從 GitHub
+        // 從 GitHub 下載同步
         async function syncFromGitHub() {
             if (!githubConfig.connected) {
                 alert('請先連接 GitHub');
@@ -1257,15 +1363,15 @@
                 });
                 
                 if (response.ok) {
-                    const fileInfo = await response.json();
-                    const content = atob(fileInfo.content);
+                    const fileData = await response.json();
+                    const content = atob(fileData.content);
                     const backupData = JSON.parse(content);
                     
-                    if (confirm('下載同步將覆蓋現有資料，確定要繼續嗎？')) {
+                    if (confirm('下載同步將覆蓋本地資料，確定要繼續嗎？')) {
                         data = backupData.data;
                         saveData();
                         renderAllSections();
-                        addSyncLog('從 GitHub 下載同步成功');
+                        addSyncLog(`從 GitHub 下載同步成功 - 備份時間: ${new Date(backupData.timestamp).toLocaleString()}`);
                     }
                 } else if (response.status === 404) {
                     addSyncLog('GitHub 上沒有找到備份檔案');
@@ -1276,7 +1382,7 @@
                 
             } catch (error) {
                 addSyncLog('下載同步失敗: ' + error.message);
-                console.error('GitHub 下載錯誤:', error);
+                console.error('GitHub 下載同步錯誤:', error);
             }
         }
 
@@ -1338,6 +1444,13 @@
             };
             return names[type] || type;
         }
+
+        // ESC 鍵關閉分頁
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePage();
+            }
+        });
     </script>
 </body>
 </html>
