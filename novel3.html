@@ -725,7 +725,15 @@
             settings: {
                 password: 'admin',
                 autoBackup: true,
-                googleDriveToken: null
+                googleDriveToken: null,
+                options: {
+                    characterTags: ['主角', '配角', '反派', '路人', 'NPC'],
+                    hairColors: ['黑色', '棕色', '金色', '紅色', '白色', '藍色', '綠色', '紫色', '銀色', '其他'],
+                    eyeColors: ['黑色', '棕色', '藍色', '綠色', '灰色', '紅色', '紫色', '金色', '異色瞳', '其他'],
+                    backgroundTypes: ['地點', '時代', '世界觀', '文化', '組織', '國家', '其他'],
+                    secretCategories: ['劇情轉折', '角色秘密', '世界設定', '伏筆', '結局', '關係秘密', '其他'],
+                    aiTemplates: []
+                }
             }
         };
 
@@ -762,13 +770,25 @@
         function loadData() {
             const saved = localStorage.getItem('novelMaterialData');
             if (saved) {
-                data = JSON.parse(saved);
+                const loadedData = JSON.parse(saved);
+                // 確保有選項設定
+                if (!loadedData.settings.options) {
+                    loadedData.settings.options = {
+                        characterTags: ['主角', '配角', '反派', '路人', 'NPC'],
+                        hairColors: ['黑色', '棕色', '金色', '紅色', '白色', '藍色', '綠色', '紫色', '銀色', '其他'],
+                        eyeColors: ['黑色', '棕色', '藍色', '綠色', '灰色', '紅色', '紫色', '金色', '異色瞳', '其他'],
+                        backgroundTypes: ['地點', '時代', '世界觀', '文化', '組織', '國家', '其他'],
+                        secretCategories: ['劇情轉折', '角色秘密', '世界設定', '伏筆', '結局', '關係秘密', '其他'],
+                        aiTemplates: []
+                    };
+                }
+                data = loadedData;
             }
         }
 
         function saveData() {
             localStorage.setItem('novelMaterialData', JSON.stringify(data));
-            if (data.settings.autoBackup) {
+            if (data.settings && data.settings.autoBackup) {
                 // 這裡可以加入 Google Drive 自動備份
             }
         }
@@ -904,9 +924,9 @@
                     <input type="text" class="form-input search-input" placeholder="搜尋角色..." onkeyup="searchCharacters(this.value)">
                     <select class="form-select" style="width: 200px;" onchange="filterByTag(this.value, 'characters')">
                         <option value="">所有標籤</option>
-                        <option value="主角">主角</option>
-                        <option value="配角">配角</option>
-                        <option value="反派">反派</option>
+                        ${data.settings.options.characterTags.map(tag => 
+                            `<option value="${tag}">${tag}</option>`
+                        ).join('')}
                     </select>
                 </div>
 
@@ -928,7 +948,13 @@
                         <div>
                             <div class="card-title">${char.name}</div>
                             <div class="card-meta">
-                                ${char.tags.map(tag => `<span class="tag tag-${tag === '主角' ? 'hero' : tag === '反派' ? 'villain' : 'support'}">${tag}</span>`).join('')}
+                                ${char.tags.map(tag => {
+                                    let tagClass = '';
+                                    if (tag === '主角') tagClass = 'tag-hero';
+                                    else if (tag === '反派') tagClass = 'tag-villain';
+                                    else if (tag === '配角') tagClass = 'tag-support';
+                                    return `<span class="tag ${tagClass}">${tag}</span>`;
+                                }).join('')}
                                 <span style="color: var(--text-secondary);">年齡: ${char.age || '未知'}</span>
                                 <span style="color: var(--text-secondary);">種族: ${char.race || '人類'}</span>
                             </div>
@@ -989,30 +1015,18 @@
                             <label class="form-label">髮色</label>
                             <select class="form-select" id="charHair">
                                 <option value="">請選擇</option>
-                                <option value="黑色" ${character.appearance.hair === '黑色' ? 'selected' : ''}>黑色</option>
-                                <option value="棕色" ${character.appearance.hair === '棕色' ? 'selected' : ''}>棕色</option>
-                                <option value="金色" ${character.appearance.hair === '金色' ? 'selected' : ''}>金色</option>
-                                <option value="紅色" ${character.appearance.hair === '紅色' ? 'selected' : ''}>紅色</option>
-                                <option value="白色" ${character.appearance.hair === '白色' ? 'selected' : ''}>白色</option>
-                                <option value="藍色" ${character.appearance.hair === '藍色' ? 'selected' : ''}>藍色</option>
-                                <option value="綠色" ${character.appearance.hair === '綠色' ? 'selected' : ''}>綠色</option>
-                                <option value="紫色" ${character.appearance.hair === '紫色' ? 'selected' : ''}>紫色</option>
-                                <option value="其他" ${character.appearance.hair === '其他' ? 'selected' : ''}>其他</option>
+                                ${data.settings.options.hairColors.map(color => 
+                                    `<option value="${color}" ${character.appearance.hair === color ? 'selected' : ''}>${color}</option>`
+                                ).join('')}
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label">眼色</label>
                             <select class="form-select" id="charEyes">
                                 <option value="">請選擇</option>
-                                <option value="黑色" ${character.appearance.eyes === '黑色' ? 'selected' : ''}>黑色</option>
-                                <option value="棕色" ${character.appearance.eyes === '棕色' ? 'selected' : ''}>棕色</option>
-                                <option value="藍色" ${character.appearance.eyes === '藍色' ? 'selected' : ''}>藍色</option>
-                                <option value="綠色" ${character.appearance.eyes === '綠色' ? 'selected' : ''}>綠色</option>
-                                <option value="灰色" ${character.appearance.eyes === '灰色' ? 'selected' : ''}>灰色</option>
-                                <option value="紅色" ${character.appearance.eyes === '紅色' ? 'selected' : ''}>紅色</option>
-                                <option value="紫色" ${character.appearance.eyes === '紫色' ? 'selected' : ''}>紫色</option>
-                                <option value="異色瞳" ${character.appearance.eyes === '異色瞳' ? 'selected' : ''}>異色瞳</option>
-                                <option value="其他" ${character.appearance.eyes === '其他' ? 'selected' : ''}>其他</option>
+                                ${data.settings.options.eyeColors.map(color => 
+                                    `<option value="${color}" ${character.appearance.eyes === color ? 'selected' : ''}>${color}</option>`
+                                ).join('')}
                             </select>
                         </div>
                     </div>
@@ -1040,9 +1054,9 @@
                     <div class="form-group">
                         <label class="form-label">標籤</label>
                         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                            <label><input type="checkbox" id="tag-hero" ${character.tags.includes('主角') ? 'checked' : ''}> 主角</label>
-                            <label><input type="checkbox" id="tag-support" ${character.tags.includes('配角') ? 'checked' : ''}> 配角</label>
-                            <label><input type="checkbox" id="tag-villain" ${character.tags.includes('反派') ? 'checked' : ''}> 反派</label>
+                            ${data.settings.options.characterTags.map(tag => 
+                                `<label><input type="checkbox" id="tag-${tag}" ${character.tags.includes(tag) ? 'checked' : ''}> ${tag}</label>`
+                            ).join('')}
                         </div>
                     </div>
 
@@ -1081,9 +1095,11 @@
             }
 
             // 收集標籤
-            if (document.getElementById('tag-hero').checked) character.tags.push('主角');
-            if (document.getElementById('tag-support').checked) character.tags.push('配角');
-            if (document.getElementById('tag-villain').checked) character.tags.push('反派');
+            data.settings.options.characterTags.forEach(tag => {
+                if (document.getElementById(`tag-${tag}`).checked) {
+                    character.tags.push(tag);
+                }
+            });
 
             if (isEdit) {
                 const index = data.characters.findIndex(c => c.id === id);
@@ -1112,11 +1128,9 @@
                     <input type="text" class="form-input search-input" placeholder="搜尋背景..." onkeyup="searchBackgrounds(this.value)">
                     <select class="form-select" style="width: 200px;" onchange="filterByType(this.value, 'backgrounds')">
                         <option value="">所有類型</option>
-                        <option value="地點">地點</option>
-                        <option value="時代">時代</option>
-                        <option value="世界觀">世界觀</option>
-                        <option value="文化">文化</option>
-                        <option value="其他">其他</option>
+                        ${data.settings.options.backgroundTypes.map(type => 
+                            `<option value="${type}">${type}</option>`
+                        ).join('')}
                     </select>
                 </div>
 
@@ -1159,7 +1173,7 @@
             const background = id ? data.backgrounds.find(b => b.id === id) : {
                 id: generateId(),
                 name: '',
-                type: '地點',
+                type: data.settings.options.backgroundTypes[0] || '地點',
                 description: '',
                 rules: '',
                 notes: '',
@@ -1183,11 +1197,9 @@
                     <div class="form-group">
                         <label class="form-label">類型</label>
                         <select class="form-select" id="bgType">
-                            <option value="地點" ${background.type === '地點' ? 'selected' : ''}>地點</option>
-                            <option value="時代" ${background.type === '時代' ? 'selected' : ''}>時代</option>
-                            <option value="世界觀" ${background.type === '世界觀' ? 'selected' : ''}>世界觀</option>
-                            <option value="文化" ${background.type === '文化' ? 'selected' : ''}>文化</option>
-                            <option value="其他" ${background.type === '其他' ? 'selected' : ''}>其他</option>
+                            ${data.settings.options.backgroundTypes.map(type => 
+                                `<option value="${type}" ${background.type === type ? 'selected' : ''}>${type}</option>`
+                            ).join('')}
                         </select>
                     </div>
 
@@ -1265,11 +1277,9 @@
                     <input type="text" class="form-input search-input" placeholder="搜尋秘密..." onkeyup="searchSecrets(this.value)">
                     <select class="form-select" style="width: 200px;" onchange="filterByCategory(this.value, 'secrets')">
                         <option value="">所有類別</option>
-                        <option value="劇情轉折">劇情轉折</option>
-                        <option value="角色秘密">角色秘密</option>
-                        <option value="世界設定">世界設定</option>
-                        <option value="伏筆">伏筆</option>
-                        <option value="結局">結局</option>
+                        ${data.settings.options.secretCategories.map(category => 
+                            `<option value="${category}">${category}</option>`
+                        ).join('')}
                     </select>
                 </div>
 
@@ -1322,7 +1332,7 @@
             const secret = id ? data.secrets.find(s => s.id === id) : {
                 id: generateId(),
                 title: '',
-                category: '劇情轉折',
+                category: data.settings.options.secretCategories[0] || '劇情轉折',
                 content: '',
                 impact: '',
                 knownBy: [],
@@ -1345,11 +1355,9 @@
                     <div class="form-group">
                         <label class="form-label">類別</label>
                         <select class="form-select" id="secretCategory">
-                            <option value="劇情轉折" ${secret.category === '劇情轉折' ? 'selected' : ''}>劇情轉折</option>
-                            <option value="角色秘密" ${secret.category === '角色秘密' ? 'selected' : ''}>角色秘密</option>
-                            <option value="世界設定" ${secret.category === '世界設定' ? 'selected' : ''}>世界設定</option>
-                            <option value="伏筆" ${secret.category === '伏筆' ? 'selected' : ''}>伏筆</option>
-                            <option value="結局" ${secret.category === '結局' ? 'selected' : ''}>結局</option>
+                            ${data.settings.options.secretCategories.map(category => 
+                                `<option value="${category}" ${secret.category === category ? 'selected' : ''}>${category}</option>`
+                            ).join('')}
                         </select>
                     </div>
 
@@ -1659,32 +1667,32 @@
                     
                     <h3 style="margin-bottom: 1rem;">👤 角色</h3>
                     <div class="material-selector">
-                        ${data.characters.map(char => `
+                        ${data.characters.length > 0 ? data.characters.map(char => `
                             <div class="material-item">
                                 <input type="checkbox" id="ai-char-${char.id}" value="${char.id}">
                                 <label for="ai-char-${char.id}">${char.name}</label>
                             </div>
-                        `).join('')}
+                        `).join('') : '<p style="color: var(--text-secondary);">尚無角色資料</p>'}
                     </div>
 
                     <h3 style="margin: 1.5rem 0 1rem;">🌍 背景</h3>
                     <div class="material-selector">
-                        ${data.backgrounds.map(bg => `
+                        ${data.backgrounds.length > 0 ? data.backgrounds.map(bg => `
                             <div class="material-item">
                                 <input type="checkbox" id="ai-bg-${bg.id}" value="${bg.id}">
                                 <label for="ai-bg-${bg.id}">${bg.name}</label>
                             </div>
-                        `).join('')}
+                        `).join('') : '<p style="color: var(--text-secondary);">尚無背景資料</p>'}
                     </div>
 
                     <h3 style="margin: 1.5rem 0 1rem;">🔐 秘密設定</h3>
                     <div class="material-selector">
-                        ${data.secrets.map(secret => `
+                        ${data.secrets.length > 0 ? data.secrets.map(secret => `
                             <div class="material-item">
                                 <input type="checkbox" id="ai-secret-${secret.id}" value="${secret.id}">
                                 <label for="ai-secret-${secret.id}">${secret.title}</label>
                             </div>
-                        `).join('')}
+                        `).join('') : '<p style="color: var(--text-secondary);">尚無秘密設定</p>'}
                     </div>
                 </div>
 
@@ -1693,13 +1701,16 @@
                     
                     <div class="form-group">
                         <label class="form-label">快速模板</label>
-                        <select class="form-select" onchange="applyTemplate(this.value)">
+                        <select class="form-select" id="templateSelect" onchange="applyTemplate(this.value)">
                             <option value="">選擇模板...</option>
                             <option value="story">創作完整故事</option>
                             <option value="dialogue">角色對話</option>
                             <option value="scene">場景描述</option>
                             <option value="dnd">DND角色卡</option>
                             <option value="plot">劇情分析</option>
+                            ${data.settings.options.aiTemplates.map((template, index) => 
+                                `<option value="custom-${index}">${template.name}</option>`
+                            ).join('')}
                         </select>
                     </div>
 
@@ -1718,6 +1729,9 @@
                         <button class="btn btn-primary" onclick="sendToPerplexity()">
                             <span>🚀</span> 發送到Perplexity
                         </button>
+                        <button class="btn btn-secondary" onclick="saveAsTemplate()">
+                            <span>💾</span> 儲存為模板
+                        </button>
                     </div>
                 </div>
 
@@ -1728,6 +1742,7 @@
                         <li>使用快速模板或自訂提示詞</li>
                         <li>點擊「生成提示詞」會自動整合所選素材</li>
                         <li>可以直接發送到Perplexity進行創作</li>
+                        <li>常用的提示詞可以儲存為模板</li>
                     </ul>
                 </div>
             `;
@@ -1736,6 +1751,16 @@
         // 應用模板
         function applyTemplate(template) {
             const promptArea = document.getElementById('aiPrompt');
+            
+            if (template.startsWith('custom-')) {
+                const index = parseInt(template.split('-')[1]);
+                const customTemplate = data.settings.options.aiTemplates[index];
+                if (customTemplate) {
+                    promptArea.value = customTemplate.content;
+                }
+                return;
+            }
+            
             switch(template) {
                 case 'story':
                     promptArea.value = '請根據以下角色和背景設定，創作一個完整的短篇故事（約2000字）：\n\n[角色資訊]\n\n[背景設定]\n\n故事要求：\n- 要有明確的開端、發展、高潮和結尾\n- 展現角色的性格特徵\n- 融入世界觀設定\n- 情節緊湊，引人入勝';
@@ -1753,6 +1778,27 @@
                     promptArea.value = '請分析以下故事設定，並提供劇情發展建議：\n\n[角色和背景資訊]\n\n分析內容：\n- 潛在的衝突點\n- 角色發展弧線\n- 可能的劇情轉折\n- 主題探討建議\n- 結局走向選項';
                     break;
             }
+        }
+
+        // 儲存為模板
+        function saveAsTemplate() {
+            const promptContent = document.getElementById('aiPrompt').value;
+            if (!promptContent) {
+                alert('請先輸入提示詞內容！');
+                return;
+            }
+            
+            const templateName = prompt('請輸入模板名稱：');
+            if (!templateName) return;
+            
+            data.settings.options.aiTemplates.push({
+                name: templateName,
+                content: promptContent
+            });
+            
+            saveData();
+            alert('模板已儲存！');
+            showAI(); // 重新載入頁面以顯示新模板
         }
 
         // 生成提示詞
@@ -1868,6 +1914,90 @@
                 </div>
 
                 <div class="card">
+                    <h2 style="margin-bottom: 1.5rem;">🎨 選項管理</h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">角色標籤</label>
+                        <div id="characterTagsList" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                            ${data.settings.options.characterTags.map(tag => 
+                                `<span class="tag">${tag} <span onclick="removeOption('characterTags', '${tag}')" style="cursor: pointer;">×</span></span>`
+                            ).join('')}
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" class="form-input" id="newCharacterTag" placeholder="新增標籤" style="flex: 1;">
+                            <button class="btn btn-secondary" onclick="addOption('characterTags', 'newCharacterTag')">新增</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">髮色選項</label>
+                        <div id="hairColorsList" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                            ${data.settings.options.hairColors.map(color => 
+                                `<span class="tag">${color} <span onclick="removeOption('hairColors', '${color}')" style="cursor: pointer;">×</span></span>`
+                            ).join('')}
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" class="form-input" id="newHairColor" placeholder="新增髮色" style="flex: 1;">
+                            <button class="btn btn-secondary" onclick="addOption('hairColors', 'newHairColor')">新增</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">眼色選項</label>
+                        <div id="eyeColorsList" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                            ${data.settings.options.eyeColors.map(color => 
+                                `<span class="tag">${color} <span onclick="removeOption('eyeColors', '${color}')" style="cursor: pointer;">×</span></span>`
+                            ).join('')}
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" class="form-input" id="newEyeColor" placeholder="新增眼色" style="flex: 1;">
+                            <button class="btn btn-secondary" onclick="addOption('eyeColors', 'newEyeColor')">新增</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">背景類型</label>
+                        <div id="backgroundTypesList" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                            ${data.settings.options.backgroundTypes.map(type => 
+                                `<span class="tag">${type} <span onclick="removeOption('backgroundTypes', '${type}')" style="cursor: pointer;">×</span></span>`
+                            ).join('')}
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" class="form-input" id="newBackgroundType" placeholder="新增類型" style="flex: 1;">
+                            <button class="btn btn-secondary" onclick="addOption('backgroundTypes', 'newBackgroundType')">新增</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">秘密類別</label>
+                        <div id="secretCategoriesList" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                            ${data.settings.options.secretCategories.map(category => 
+                                `<span class="tag">${category} <span onclick="removeOption('secretCategories', '${category}')" style="cursor: pointer;">×</span></span>`
+                            ).join('')}
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" class="form-input" id="newSecretCategory" placeholder="新增類別" style="flex: 1;">
+                            <button class="btn btn-secondary" onclick="addOption('secretCategories', 'newSecretCategory')">新增</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">AI提示詞模板</label>
+                        <div id="aiTemplatesList" style="margin-bottom: 0.5rem;">
+                            ${data.settings.options.aiTemplates.map((template, index) => 
+                                `<div class="card" style="margin-bottom: 0.5rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <strong>${template.name}</strong>
+                                        <button class="btn btn-danger" onclick="removeAITemplate(${index})" style="padding: 0.25rem 0.75rem;">刪除</button>
+                                    </div>
+                                    <p style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">${template.content.substring(0, 100)}...</p>
+                                </div>`
+                            ).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
                     <h2 style="margin-bottom: 1.5rem;">☁️ 備份與還原</h2>
                     
                     <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
@@ -1894,11 +2024,11 @@
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <span>建立時間</span>
-                            <span>${new Date(Math.min(...getAllItems().map(item => item.createdAt))).toLocaleDateString()}</span>
+                            <span>${getAllItems().length > 0 ? new Date(Math.min(...getAllItems().map(item => item.createdAt))).toLocaleDateString() : '尚無資料'}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <span>最後更新</span>
-                            <span>${new Date(Math.max(...getAllItems().map(item => item.updatedAt))).toLocaleDateString()}</span>
+                            <span>${getAllItems().length > 0 ? new Date(Math.max(...getAllItems().map(item => item.updatedAt))).toLocaleDateString() : '尚無資料'}</span>
                         </div>
                     </div>
                 </div>
@@ -1911,6 +2041,47 @@
                     </button>
                 </div>
             `;
+        }
+
+        // 新增選項
+        function addOption(optionType, inputId) {
+            const input = document.getElementById(inputId);
+            const value = input.value.trim();
+            
+            if (!value) {
+                alert('請輸入內容！');
+                return;
+            }
+            
+            if (data.settings.options[optionType].includes(value)) {
+                alert('此選項已存在！');
+                return;
+            }
+            
+            data.settings.options[optionType].push(value);
+            saveData();
+            showSettings();
+        }
+
+        // 移除選項
+        function removeOption(optionType, value) {
+            if (!confirm(`確定要刪除「${value}」嗎？`)) return;
+            
+            const index = data.settings.options[optionType].indexOf(value);
+            if (index > -1) {
+                data.settings.options[optionType].splice(index, 1);
+                saveData();
+                showSettings();
+            }
+        }
+
+        // 移除AI模板
+        function removeAITemplate(index) {
+            if (!confirm(`確定要刪除這個模板嗎？`)) return;
+            
+            data.settings.options.aiTemplates.splice(index, 1);
+            saveData();
+            showSettings();
         }
 
         // 輔助函數
@@ -2095,7 +2266,15 @@
                 settings: {
                     password: 'admin',
                     autoBackup: true,
-                    googleDriveToken: null
+                    googleDriveToken: null,
+                    options: {
+                        characterTags: ['主角', '配角', '反派', '路人', 'NPC'],
+                        hairColors: ['黑色', '棕色', '金色', '紅色', '白色', '藍色', '綠色', '紫色', '銀色', '其他'],
+                        eyeColors: ['黑色', '棕色', '藍色', '綠色', '灰色', '紅色', '紫色', '金色', '異色瞳', '其他'],
+                        backgroundTypes: ['地點', '時代', '世界觀', '文化', '組織', '國家', '其他'],
+                        secretCategories: ['劇情轉折', '角色秘密', '世界設定', '伏筆', '結局', '關係秘密', '其他'],
+                        aiTemplates: []
+                    }
                 }
             };
             saveData();
