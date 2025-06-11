@@ -13,22 +13,23 @@
 
         body {
             font-family: 'Microsoft JhengHei', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             min-height: 100vh;
             padding: 20px;
+            color: #2c3e50;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
             color: white;
             padding: 30px;
             text-align: center;
@@ -37,11 +38,13 @@
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
+            font-weight: 300;
         }
 
         .header p {
             font-size: 1.1em;
             opacity: 0.9;
+            font-weight: 300;
         }
 
         .nav-tabs {
@@ -59,16 +62,19 @@
             cursor: pointer;
             font-size: 16px;
             transition: all 0.3s ease;
+            color: #5a6c7d;
         }
 
         .nav-tab.active {
             background: white;
-            border-bottom: 3px solid #4facfe;
-            color: #4facfe;
+            border-bottom: 3px solid #34495e;
+            color: #34495e;
+            font-weight: 500;
         }
 
         .nav-tab:hover {
             background: #e9ecef;
+            color: #2c3e50;
         }
 
         .content {
@@ -94,37 +100,50 @@
         .btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
+            font-weight: 500;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: #34495e;
             color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2c3e50;
+            transform: translateY(-1px);
         }
 
         .btn-secondary {
-            background: #6c757d;
+            background: #95a5a6;
             color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
         }
 
         .btn-success {
-            background: #28a745;
+            background: #27ae60;
             color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
         }
 
         .btn-danger {
-            background: #dc3545;
+            background: #e74c3c;
             color: white;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .btn-danger:hover {
+            background: #c0392b;
         }
 
         .search-container {
@@ -134,14 +153,16 @@
         .search-input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
             font-size: 16px;
+            background: #ffffff;
         }
 
         .search-input:focus {
             outline: none;
-            border-color: #4facfe;
+            border-color: #34495e;
+            box-shadow: 0 0 0 2px rgba(52, 73, 94, 0.1);
         }
 
         .items-grid {
@@ -151,27 +172,29 @@
         }
 
         .item-card {
-            background: #f8f9fa;
-            border-radius: 10px;
+            background: #ffffff;
+            border-radius: 8px;
             padding: 20px;
-            border: 1px solid #e9ecef;
+            border: 1px solid #ecf0f1;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .item-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            border-color: #bdc3c7;
         }
 
         .item-title {
             font-size: 1.3em;
-            font-weight: bold;
-            color: #333;
+            font-weight: 600;
+            color: #2c3e50;
             margin-bottom: 10px;
         }
 
         .item-content {
-            color: #666;
+            color: #5a6c7d;
             line-height: 1.6;
             margin-bottom: 15px;
         }
@@ -181,7 +204,7 @@
             justify-content: space-between;
             align-items: center;
             font-size: 0.9em;
-            color: #888;
+            color: #7f8c8d;
         }
 
         .item-actions {
@@ -202,14 +225,14 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(44, 62, 80, 0.8);
         }
 
         .modal-content {
             background-color: white;
             margin: 5% auto;
             padding: 30px;
-            border-radius: 15px;
+            border-radius: 8px;
             width: 80%;
             max-width: 600px;
             max-height: 80vh;
@@ -217,7 +240,7 @@
         }
 
         .close {
-            color: #aaa;
+            color: #95a5a6;
             float: right;
             font-size: 28px;
             font-weight: bold;
@@ -225,7 +248,7 @@
         }
 
         .close:hover {
-            color: black;
+            color: #2c3e50;
         }
 
         .form-group {
@@ -235,17 +258,18 @@
         .form-label {
             display: block;
             margin-bottom: 8px;
-            font-weight: bold;
-            color: #333;
+            font-weight: 500;
+            color: #2c3e50;
         }
 
         .form-input, .form-textarea {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
             font-size: 16px;
             font-family: inherit;
+            background: #ffffff;
         }
 
         .form-textarea {
@@ -255,15 +279,17 @@
 
         .form-input:focus, .form-textarea:focus {
             outline: none;
-            border-color: #4facfe;
+            border-color: #34495e;
+            box-shadow: 0 0 0 2px rgba(52, 73, 94, 0.1);
         }
 
         .selection-container {
             max-height: 300px;
             overflow-y: auto;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
+            border: 1px solid #ecf0f1;
+            border-radius: 6px;
             padding: 15px;
+            background: #fafbfc;
         }
 
         .selection-header {
@@ -271,7 +297,7 @@
             gap: 10px;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid #ecf0f1;
         }
 
         .selection-item {
@@ -279,18 +305,21 @@
             align-items: center;
             padding: 10px;
             margin-bottom: 8px;
-            background: #f8f9fa;
-            border-radius: 6px;
+            background: #ffffff;
+            border-radius: 4px;
+            border: 1px solid #ecf0f1;
         }
 
         .selection-item input[type="checkbox"] {
             margin-right: 10px;
             transform: scale(1.2);
+            accent-color: #34495e;
         }
 
         .selection-item label {
             cursor: pointer;
             flex: 1;
+            color: #2c3e50;
         }
 
         .stats-grid {
@@ -301,29 +330,31 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
             color: white;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 8px;
             text-align: center;
         }
 
         .stat-number {
             font-size: 2.5em;
-            font-weight: bold;
+            font-weight: 300;
             margin-bottom: 5px;
         }
 
         .stat-label {
             font-size: 1.1em;
             opacity: 0.9;
+            font-weight: 300;
         }
 
         .github-settings {
-            background: #f8f9fa;
+            background: #fafbfc;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 8px;
             margin-bottom: 20px;
+            border: 1px solid #ecf0f1;
         }
 
         .github-status {
@@ -337,34 +368,36 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: #28a745;
+            background: #27ae60;
         }
 
         .status-indicator.disconnected {
-            background: #dc3545;
+            background: #e74c3c;
         }
 
         .backup-log {
             background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
+            border: 1px solid #ecf0f1;
+            border-radius: 6px;
             padding: 15px;
             max-height: 200px;
             overflow-y: auto;
-            font-family: monospace;
+            font-family: 'Consolas', monospace;
             font-size: 14px;
+            color: #2c3e50;
         }
 
         .selection-count {
             font-size: 14px;
-            color: #666;
+            color: #5a6c7d;
             margin-bottom: 10px;
+            font-weight: 500;
         }
 
         @media (max-width: 768px) {
             .container {
                 margin: 10px;
-                border-radius: 10px;
+                border-radius: 8px;
             }
 
             .header {
@@ -423,7 +456,7 @@
             <!-- 角色設定 -->
             <div id="characters" class="section active">
                 <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="openAddModal('character')">➕ 新增角色</button>
+                    <button class="btn btn-primary" onclick="openAddModal('characters')">➕ 新增角色</button>
                 </div>
                 
                 <div class="search-container">
@@ -438,7 +471,7 @@
             <!-- 故事背景 -->
             <div id="backgrounds" class="section">
                 <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="openAddModal('background')">➕ 新增背景</button>
+                    <button class="btn btn-primary" onclick="openAddModal('backgrounds')">➕ 新增背景</button>
                 </div>
                 
                 <div class="search-container">
@@ -453,7 +486,7 @@
             <!-- 秘密設定 -->
             <div id="secrets" class="section">
                 <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="openAddModal('secret')">➕ 新增秘密</button>
+                    <button class="btn btn-primary" onclick="openAddModal('secrets')">➕ 新增秘密</button>
                 </div>
                 
                 <div class="search-container">
@@ -504,7 +537,7 @@
                 <div class="github-settings">
                     <h3>🐙 GitHub 備份設定</h3>
                     <div class="github-status">
-                        <div class="status-indicator" id="github-status"></div>
+                        <div class="status-indicator disconnected" id="github-status"></div>
                         <span id="github-status-text">未連接</span>
                     </div>
                     
@@ -660,7 +693,7 @@
             loadGitHubConfig();
         });
 
-                // 修正資料初始化（在 loadData 函數中）
+        // 修正資料初始化
         function loadData() {
             const savedData = localStorage.getItem('novelMaterials');
             if (savedData) {
@@ -676,7 +709,6 @@
                     };
                 }
             } else {
-                // 確保資料結構完整
                 data = {
                     characters: [],
                     backgrounds: [],
@@ -692,12 +724,16 @@
             if (!data.novels) data.novels = [];
         }
 
-
         // 保存資料
         function saveData() {
-            localStorage.setItem('novelMaterials', JSON.stringify(data));
-            updateStats();
-            syncToGitHub();
+            try {
+                localStorage.setItem('novelMaterials', JSON.stringify(data));
+                updateStats();
+                syncToGitHub();
+            } catch (error) {
+                console.error('保存資料失敗:', error);
+                alert('保存失敗：' + error.message);
+            }
         }
 
         // 載入 GitHub 設定
@@ -718,11 +754,9 @@
 
         // 顯示區段
         function showSection(section) {
-            // 隱藏所有區段
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             
-            // 顯示選中的區段
             document.getElementById(section).classList.add('active');
             event.target.classList.add('active');
             
@@ -745,10 +779,17 @@
 
             container.innerHTML = '';
             
-            data[section].forEach((item, index) => {
-                const card = createItemCard(item, section, index);
-                container.appendChild(card);
-            });
+            if (data[section] && data[section].length > 0) {
+                data[section].forEach((item, index) => {
+                    let card;
+                    if (section === 'novels') {
+                        card = createNovelCard(item, index);
+                    } else {
+                        card = createItemCard(item, section, index);
+                    }
+                    container.appendChild(card);
+                });
+            }
         }
 
         // 創建項目卡片
@@ -756,7 +797,6 @@
             const card = document.createElement('div');
             card.className = 'item-card';
             
-            // 處理內容顯示 - 秘密設定不再需要隱藏
             let contentHtml = `<div class="item-content">${item.content}</div>`;
             
             card.innerHTML = `
@@ -791,8 +831,11 @@
             });
         }
 
+        // 修正 openAddModal 函數 - 這是主要問題
         function openAddModal(type) {
-            // 驗證類型
+            console.log('開啟模態框，類型:', type);
+            
+            // 驗證類型 - 使用複數形式
             const validTypes = ['characters', 'backgrounds', 'secrets'];
             if (!validTypes.includes(type)) {
                 console.error('無效的類型:', type);
@@ -815,7 +858,6 @@
             
             document.getElementById('addModal').style.display = 'block';
         }
-
 
         // 編輯項目
         function editItem(type, index) {
@@ -854,7 +896,6 @@
             const title = document.getElementById('item-title').value.trim();
             const content = document.getElementById('item-content').value.trim();
             
-            // 驗證輸入
             if (!title) {
                 alert('請填寫標題');
                 return;
@@ -865,7 +906,6 @@
                 return;
             }
             
-            // 驗證模態類型
             if (!currentModalType) {
                 alert('系統錯誤：未知的項目類型');
                 return;
@@ -895,7 +935,6 @@
             renderSection(currentModalType);
             closeModal();
         });
-
 
         // 開啟小說模態框
         function openNovelModal() {
@@ -942,7 +981,6 @@
             const checkboxes = container.querySelectorAll('input[type="checkbox"]');
             checkboxes.forEach(checkbox => checkbox.checked = true);
             
-            // 更新計數
             const type = containerId.replace('novel-', '');
             updateSelectionCount(type);
         }
@@ -953,7 +991,6 @@
             const checkboxes = container.querySelectorAll('input[type="checkbox"]');
             checkboxes.forEach(checkbox => checkbox.checked = false);
             
-            // 更新計數
             const type = containerId.replace('novel-', '');
             updateSelectionCount(type);
         }
@@ -963,7 +1000,6 @@
             const container = document.getElementById(`novel-${type}`);
             const checkboxes = container.querySelectorAll('input[type="checkbox"]');
             const checkedCount = container.querySelectorAll('input[type="checkbox"]:checked').length;
-            const totalCount = checkboxes.length;
             
             const countElement = document.getElementById(`${type}-count`);
             countElement.textContent = `已選擇: ${checkedCount} 個${getTypeName(type.slice(0, -1))}`;
@@ -976,7 +1012,6 @@
             const title = document.getElementById('novel-title').value;
             const description = document.getElementById('novel-description').value;
             
-            // 收集選中的項目
             const selectedCharacters = getSelectedItems('novel-characters');
             const selectedBackgrounds = getSelectedItems('novel-backgrounds');
             const selectedSecrets = getSelectedItems('novel-secrets');
@@ -1056,30 +1091,29 @@
                 
                 <h5>👤 角色 (${novel.characters.length}個):</h5>
                 ${novel.characters.map(char => `
-                    <div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                        <strong>${char.title}</strong><br>
-                        ${char.content}
+                    <div style="margin: 10px 0; padding: 15px; background: #fafbfc; border-radius: 6px; border: 1px solid #ecf0f1;">
+                        <strong style="color: #2c3e50;">${char.title}</strong><br>
+                        <span style="color: #5a6c7d;">${char.content}</span>
                     </div>
                 `).join('')}
                 
                 <h5>🌍 背景 (${novel.backgrounds.length}個):</h5>
                 ${novel.backgrounds.map(bg => `
-                    <div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                        <strong>${bg.title}</strong><br>
-                        ${bg.content}
+                    <div style="margin: 10px 0; padding: 15px; background: #fafbfc; border-radius: 6px; border: 1px solid #ecf0f1;">
+                        <strong style="color: #2c3e50;">${bg.title}</strong><br>
+                        <span style="color: #5a6c7d;">${bg.content}</span>
                     </div>
                 `).join('')}
                 
                 <h5>🔐 秘密 (${novel.secrets.length}個):</h5>
                 ${novel.secrets.map(secret => `
-                    <div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                        <strong>${secret.title}</strong><br>
-                        ${secret.content}
+                    <div style="margin: 10px 0; padding: 15px; background: #fafbfc; border-radius: 6px; border: 1px solid #ecf0f1;">
+                        <strong style="color: #2c3e50;">${secret.title}</strong><br>
+                        <span style="color: #5a6c7d;">${secret.content}</span>
                     </div>
                 `).join('')}
             `;
             
-            // 創建詳情模態框
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.style.display = 'block';
@@ -1139,13 +1173,8 @@
             if (!githubConfig.connected) return;
             
             try {
-                // 這里應該實現實際的 GitHub API 調用
-                // 由於這是示例代碼，我們只是模擬同步過程
                 addSyncLog('開始同步到 GitHub...');
-                
-                // 模擬 API 請求延遲
                 await new Promise(resolve => setTimeout(resolve, 1000));
-                
                 addSyncLog('同步完成');
             } catch (error) {
                 addSyncLog('同步失敗: ' + error.message);
@@ -1199,30 +1228,16 @@
         // 獲取類型名稱
         function getTypeName(type) {
             const names = {
+                'characters': '角色',
                 'character': '角色',
+                'backgrounds': '背景',
                 'background': '背景',
+                'secrets': '秘密',
                 'secret': '秘密',
+                'novels': '小說',
                 'novel': '小說'
             };
             return names[type] || type;
-        }
-
-        // 重新定義 renderSection 以處理不同的卡片類型
-        function renderSection(section) {
-            const container = document.getElementById(section + '-grid');
-            if (!container) return;
-
-            container.innerHTML = '';
-            
-            data[section].forEach((item, index) => {
-                let card;
-                if (section === 'novels') {
-                    card = createNovelCard(item, index);
-                } else {
-                    card = createItemCard(item, section, index);
-                }
-                container.appendChild(card);
-            });
         }
 
         // 點擊模態框外部關閉
