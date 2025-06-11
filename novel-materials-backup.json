@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-06-11T15:06:34.264Z",
+  "timestamp": "2025-06-11T15:06:46.997Z",
   "data": {
     "characters": [
       {
@@ -13,6 +13,12 @@
         "content": "聖騎",
         "createdAt": "2025-06-11T15:06:34.264Z",
         "updatedAt": "2025-06-11T15:06:34.264Z"
+      },
+      {
+        "title": "夜雨",
+        "content": "淨眼",
+        "createdAt": "2025-06-11T15:06:46.997Z",
+        "updatedAt": "2025-06-11T15:06:46.997Z"
       }
     ],
     "backgrounds": [],
