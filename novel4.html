@@ -757,7 +757,6 @@
                             <button class="btn btn-primary" onclick="generatePrompt()">生成完整提示詞</button>
                             <button class="btn btn-success" onclick="sendToPerplexity()">發送到 Perplexity</button>
                             <button class="btn btn-secondary" onclick="copyPrompt()">複製到剪貼簿</button>
-                            <button class="btn btn-secondary" onclick="savePromptTemplate()">儲存模板</button>
                         </div>
 
                         <!-- 提示詞歷史 -->
@@ -1945,28 +1944,7 @@
                 });
             }
         }
-
-        function savePromptTemplate() {
-            const promptContent = document.getElementById('customPrompt').value;
-            const title = prompt('請輸入模板名稱：');
-            
-            if (title && prompt.trim()) {
-                if (!appData.settings.customTemplates) {
-                    appData.settings.customTemplates = [];
-                }
-                
-                appData.settings.customTemplates.push({
-                    id: generateId(),
-                    title,
-                    content: prompt,
-                    createdAt: new Date().toISOString()
-                });
-                
-                saveData();
-                alert('模板已儲存！');
-            }
-        }
-
+        
         function savePromptToHistory(prompt) {
             const selectedMaterials = getSelectedMaterials();
             const historyItem = {
