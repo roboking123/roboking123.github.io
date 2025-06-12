@@ -1,0 +1,609 @@
+import React, { useState, useEffect } from 'react';
+import { Search, Plus, Edit2, Save, Trash2, Copy, ExternalLink, Upload, Download, Check, X } from 'lucide-react';
+
+const App = () => {
+  // 狀態管理
+  const [currentTab, setCurrentTab] = useState('home');
+  const [topics, setTopics] = useState([]);
+  const [outputs, setOutputs] = useState([]);
+  const [selectedTopicId, setSelectedTopicId] = useState(null);
+  const [selectedOutputId, setSelectedOutputId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [message, setMessage] = useState({ type: '', text: '' });
+  const [loading, setLoading] = useState(false);
+
+  // 編輯狀態
+  const [editingFields, setEditingFields] = useState({});
+  const [tempValues, setTempValues] = useState({});
+
+  // AI助手狀態
+  const [selectedTopicsForAI, setSelectedTopicsForAI] = useState([]);
+  const [customPrompt, setCustomPrompt] = useState('');
+
+  // GitHub備份狀態
+  const [githubRepo, setGithubRepo] = useState('');
+  const [githubPath, setGithubPath] = useState('backup.json');
+
+  // 顯示訊息
+  const showMessage = (type, text) => {
+    setMessage({ type, text });
+    setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+  };
+
+  // 建立新主題
+  const createNewTopic = () => {
+    const newTopic = {
+      id: Date.now().toString(),
+      name: '',
+      category: '',
+      content: '',
+      note: '',
+      createdAt: new Date().toISOString()
+    };
+    setTopics([...topics, newTopic]);
+    setSelectedTopicId(newTopic.id);
+    setCurrentTab('topic');
+    setEditingFields({ name: true, category: true, content: true, note: true });
+    setTempValues(newTopic);
+  };
+
+  // 開始編輯欄位
+  const startEdit = (field) => {
+    const topic = topics.find(t => t.id === selectedTopicId);
+    setEditingFields({ ...editingFields, [field]: true });
+    setTempValues({ ...tempValues, [field]: topic[field] });
+  };
+
+  // 儲存主題
+  const saveTopic = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setTopics(topics.map(t => 
+        t.id === selectedTopicId ? { ...t, ...tempValues } : t
+      ));
+      setEditingFields({});
+      setLoading(false);
+      showMessage('success', '儲存成功！');
+    }, 500);
+  };
+
+  // 刪除主題
+  const deleteTopic = () => {
+    if (window.confirm('確定要刪除此主題嗎？')) {
+      setTopics(topics.filter(t => t.id !== selectedTopicId));
+      setCurrentTab('home');
+      showMessage('success', '刪除成功！');
+    }
+  };
+
+  // 整合內容
+  const getIntegratedContent = () => {
+    return selectedTopicsForAI
+      .map(topicId => {
+        const topic = topics.find(t => t.id === topicId);
+        return topic ? `# 主題：${topic.name}\n${topic.content}` : '';
+      })
+      .filter(content => content)
+      .join('\n\n');
+  };
+
+  // 輸出到Perplexity
+  const outputToPerplexity = () => {
+    const content = getIntegratedContent();
+    const fullQuery = `${content}\n\n${customPrompt}`;
+    const url = `https://www.perplexity.ai/?q=${encodeURIComponent(fullQuery)}`;
+    
+    // 建立輸出紀錄
+    const newOutput = {
+      id: Date.now().toString(),
+      name: `輸出紀錄_${new Date().toLocaleString('zh-TW')}`,
+      note: '',
+      time: new Date().toISOString(),
+      topicNames: selectedTopicsForAI.map(id => 
+        topics.find(t => t.id === id)?.name || ''
+      ).filter(name => name),
+      customPrompt: customPrompt,
+      aiResponse: ''
+    };
+    
+    setOutputs([...outputs, newOutput]);
+    window.open(url, '_blank');
+    showMessage('success', '已開啟Perplexity並建立輸出紀錄！');
+  };
+
+  // 複製內容
+  const copyContent = () => {
+    const content = getIntegratedContent();
+    const fullText = `${content}\n\n${customPrompt}`;
+    navigator.clipboard.writeText(fullText);
+    
+    // 建立輸出紀錄
+    const newOutput = {
+      id: Date.now().toString(),
+      name: `輸出紀錄_${new Date().toLocaleString('zh-TW')}`,
+      note: '',
+      time: new Date().toISOString(),
+      topicNames: selectedTopicsForAI.map(id => 
+        topics.find(t => t.id === id)?.name || ''
+      ).filter(name => name),
+      customPrompt: customPrompt,
+      aiResponse: ''
+    };
+    
+    setOutputs([...outputs, newOutput]);
+    showMessage('success', '已複製到剪貼簿並建立輸出紀錄！');
+  };
+
+  // 更新輸出紀錄
+  const updateOutput = (field, value) => {
+    setOutputs(outputs.map(o => 
+      o.id === selectedOutputId ? { ...o, [field]: value } : o
+    ));
+  };
+
+  // 篩選主題
+  const filteredTopics = topics.filter(topic => 
+    topic.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // 排序主題（按名稱）
+  const sortedTopics = [...filteredTopics].sort((a, b) => 
+    a.name.localeCompare(b.name, 'zh-TW')
+  );
+
+  // 渲染主頁
+  const renderHome = () => (
+    <div className="max-w-4xl mx-auto">
+      <div className="mb-6 flex gap-4">
+        <div className="flex-1">
+          <input
+            type="text"
+            placeholder="搜尋主題名稱..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+          />
+        </div>
+        <button
+          onClick={createNewTopic}
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2"
+        >
+          <Plus size={20} />
+          新增主題
+        </button>
+      </div>
+
+      <div className="space-y-3">
+        {sortedTopics.map(topic => (
+          <div
+            key={topic.id}
+            onClick={() => {
+              setSelectedTopicId(topic.id);
+              setCurrentTab('topic');
+            }}
+            className="p-4 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
+          >
+            <h3 className="text-lg font-semibold text-gray-800">
+              {topic.name || '(未命名主題)'}
+            </h3>
+            <p className="text-gray-600 text-sm mt-1">
+              {topic.note || '(無備註)'}
+            </p>
+          </div>
+        ))}
+        
+        {sortedTopics.length === 0 && (
+          <div className="text-center py-12 text-gray-500">
+            {searchTerm ? '找不到符合的主題' : '尚未建立任何主題'}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  // 渲染主題內容分頁
+  const renderTopic = () => {
+    const topic = topics.find(t => t.id === selectedTopicId);
+    if (!topic) return <div>找不到主題</div>;
+
+    const renderField = (field, label, multiline = false) => (
+      <div className="mb-4">
+        <div className="flex items-center justify-between mb-2">
+          <label className="font-medium text-gray-700">{label}</label>
+          {!editingFields[field] && (
+            <button
+              onClick={() => startEdit(field)}
+              className="text-blue-500 hover:text-blue-600"
+            >
+              <Edit2 size={18} />
+            </button>
+          )}
+        </div>
+        {editingFields[field] ? (
+          multiline ? (
+            <textarea
+              value={tempValues[field] || ''}
+              onChange={(e) => setTempValues({ ...tempValues, [field]: e.target.value })}
+              placeholder={`請輸入${label}...`}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+              rows={6}
+            />
+          ) : (
+            <input
+              type="text"
+              value={tempValues[field] || ''}
+              onChange={(e) => setTempValues({ ...tempValues, [field]: e.target.value })}
+              placeholder={`請輸入${label}...`}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+            />
+          )
+        ) : (
+          <div className={`px-3 py-2 bg-gray-50 rounded-lg ${!topic[field] && 'text-gray-400'}`}>
+            {topic[field] || `(請輸入${label}...)`}
+          </div>
+        )}
+      </div>
+    );
+
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white p-6 rounded-lg border border-gray-200">
+          {renderField('name', '主題名稱')}
+          {renderField('category', '分類')}
+          {renderField('content', '內容', true)}
+          {renderField('note', '備註')}
+
+          <div className="flex gap-3 mt-6">
+            {Object.keys(editingFields).length > 0 && (
+              <button
+                onClick={saveTopic}
+                disabled={loading}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2 disabled:opacity-50"
+              >
+                <Save size={18} />
+                {loading ? '儲存中...' : '儲存'}
+              </button>
+            )}
+            <button
+              onClick={deleteTopic}
+              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center gap-2"
+            >
+              <Trash2 size={18} />
+              刪除
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // 渲染AI助手分頁
+  const renderAIHelper = () => (
+    <div className="max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
+          <h3 className="text-lg font-semibold mb-4">選擇主題</h3>
+          <div className="space-y-2 max-h-96 overflow-y-auto border border-gray-200 rounded-lg p-3">
+            {topics.map(topic => (
+              <label key={topic.id} className="flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={selectedTopicsForAI.includes(topic.id)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedTopicsForAI([...selectedTopicsForAI, topic.id]);
+                    } else {
+                      setSelectedTopicsForAI(selectedTopicsForAI.filter(id => id !== topic.id));
+                    }
+                  }}
+                  className="mr-3"
+                />
+                <span>{topic.name || '(未命名主題)'}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-4">整合內容預覽</h3>
+          <textarea
+            value={getIntegratedContent()}
+            readOnly
+            placeholder="請選擇主題..."
+            className="w-full h-64 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg"
+          />
+          
+          <div className="mt-4">
+            <label className="block font-medium text-gray-700 mb-2">自訂提示詞</label>
+            <textarea
+              value={customPrompt}
+              onChange={(e) => setCustomPrompt(e.target.value)}
+              placeholder="請輸入額外的提問或指令..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+              rows={3}
+            />
+          </div>
+
+          <div className="flex gap-3 mt-4">
+            <button
+              onClick={outputToPerplexity}
+              disabled={selectedTopicsForAI.length === 0}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2 disabled:opacity-50"
+            >
+              <ExternalLink size={18} />
+              輸出到 Perplexity
+            </button>
+            <button
+              onClick={copyContent}
+              disabled={selectedTopicsForAI.length === 0}
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 flex items-center gap-2 disabled:opacity-50"
+            >
+              <Copy size={18} />
+              複製內容
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // 渲染已輸出條目
+  const renderOutputHistory = () => {
+    if (selectedOutputId) {
+      const output = outputs.find(o => o.id === selectedOutputId);
+      if (!output) return <div>找不到輸出紀錄</div>;
+
+      return (
+        <div className="max-w-2xl mx-auto">
+          <button
+            onClick={() => setSelectedOutputId(null)}
+            className="mb-4 text-blue-500 hover:text-blue-600"
+          >
+            ← 返回列表
+          </button>
+
+          <div className="bg-white p-6 rounded-lg border border-gray-200">
+            <div className="mb-4">
+              <label className="font-medium text-gray-700">紀錄名稱</label>
+              <input
+                type="text"
+                value={output.name}
+                onChange={(e) => updateOutput('name', e.target.value)}
+                placeholder="請輸入紀錄名稱..."
+                className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="font-medium text-gray-700">備註</label>
+              <input
+                type="text"
+                value={output.note}
+                onChange={(e) => updateOutput('note', e.target.value)}
+                placeholder="請輸入備註..."
+                className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+              />
+            </div>
+
+            <div className="mb-4">
+              <p className="font-medium text-gray-700">輸出時間</p>
+              <p className="mt-1 text-gray-600">
+                {new Date(output.time).toLocaleString('zh-TW')}
+              </p>
+            </div>
+
+            <div className="mb-4">
+              <p className="font-medium text-gray-700">整合主題</p>
+              <p className="mt-1 text-gray-600">
+                {output.topicNames.join(', ') || '(無)'}
+              </p>
+            </div>
+
+            <div className="mb-4">
+              <p className="font-medium text-gray-700">自訂提示詞</p>
+              <p className="mt-1 text-gray-600 whitespace-pre-wrap">
+                {output.customPrompt || '(無)'}
+              </p>
+            </div>
+
+            <div className="mb-4">
+              <label className="font-medium text-gray-700">AI 回覆結果</label>
+              <textarea
+                value={output.aiResponse}
+                onChange={(e) => updateOutput('aiResponse', e.target.value)}
+                placeholder="請貼上 Perplexity 的回覆結果..."
+                className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+                rows={8}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="space-y-3">
+          {outputs.map(output => (
+            <div
+              key={output.id}
+              onClick={() => setSelectedOutputId(output.id)}
+              className="p-4 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
+            >
+              <h3 className="text-lg font-semibold text-gray-800">
+                {output.name}
+              </h3>
+              <p className="text-gray-600 text-sm mt-1">
+                {output.note || '(無備註)'}
+              </p>
+              <p className="text-gray-500 text-xs mt-2">
+                {new Date(output.time).toLocaleString('zh-TW')}
+              </p>
+            </div>
+          ))}
+          
+          {outputs.length === 0 && (
+            <div className="text-center py-12 text-gray-500">
+              尚未有任何輸出紀錄
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // 渲染備份分頁
+  const renderBackup = () => (
+    <div className="max-w-2xl mx-auto">
+      <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <h3 className="text-lg font-semibold mb-4">GitHub 備份設定</h3>
+        
+        <div className="mb-6">
+          <label className="block font-medium text-gray-700 mb-2">儲存庫路徑</label>
+          <input
+            type="text"
+            value={githubRepo}
+            onChange={(e) => setGithubRepo(e.target.value)}
+            placeholder="請輸入 username/repository..."
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block font-medium text-gray-700 mb-2">檔案名稱</label>
+          <input
+            type="text"
+            value={githubPath}
+            onChange={(e) => setGithubPath(e.target.value)}
+            placeholder="請輸入檔案路徑..."
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+          />
+        </div>
+
+        <div className="flex gap-3">
+          <button
+            onClick={() => {
+              showMessage('info', '需要實作 GitHub OAuth 授權流程');
+            }}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2"
+          >
+            <Upload size={18} />
+            備份到 GitHub
+          </button>
+          <button
+            onClick={() => {
+              showMessage('info', '需要實作 GitHub OAuth 授權流程');
+            }}
+            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2"
+          >
+            <Download size={18} />
+            從 GitHub 還原
+          </button>
+        </div>
+
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+          <p className="text-sm text-gray-600">
+            注意：GitHub 備份功能需要 OAuth 授權。備份時會將所有資料儲存為 JSON 格式，
+            還原時會逐筆比對並詢問是否覆蓋已存在的資料。
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  // 主要渲染
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* 頁首 */}
+      <header className="bg-white border-b border-gray-200">
+        <div className="container mx-auto px-4 py-4">
+          <h1 className="text-2xl font-bold text-gray-800">知識與提示詞管理工具</h1>
+        </div>
+      </header>
+
+      {/* 分頁導航 */}
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="container mx-auto px-4">
+          <div className="flex space-x-6">
+            <button
+              onClick={() => setCurrentTab('home')}
+              className={`py-3 px-1 border-b-2 font-medium text-sm ${
+                currentTab === 'home'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              主頁
+            </button>
+            {selectedTopicId && (
+              <button
+                onClick={() => setCurrentTab('topic')}
+                className={`py-3 px-1 border-b-2 font-medium text-sm ${
+                  currentTab === 'topic'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                主題內容
+              </button>
+            )}
+            <button
+              onClick={() => setCurrentTab('ai')}
+              className={`py-3 px-1 border-b-2 font-medium text-sm ${
+                currentTab === 'ai'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              AI 助手
+            </button>
+            <button
+              onClick={() => setCurrentTab('history')}
+              className={`py-3 px-1 border-b-2 font-medium text-sm ${
+                currentTab === 'history'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              已輸出條目
+            </button>
+            <button
+              onClick={() => setCurrentTab('backup')}
+              className={`py-3 px-1 border-b-2 font-medium text-sm ${
+                currentTab === 'backup'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              備份管理
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* 主要內容 */}
+      <main className="container mx-auto px-4 py-6">
+        {currentTab === 'home' && renderHome()}
+        {currentTab === 'topic' && renderTopic()}
+        {currentTab === 'ai' && renderAIHelper()}
+        {currentTab === 'history' && renderOutputHistory()}
+        {currentTab === 'backup' && renderBackup()}
+      </main>
+
+      {/* 訊息提示 */}
+      {message.text && (
+        <div className={`fixed bottom-4 right-4 px-4 py-2 rounded-lg text-white flex items-center gap-2 ${
+          message.type === 'success' ? 'bg-green-500' :
+          message.type === 'error' ? 'bg-red-500' :
+          'bg-blue-500'
+        }`}>
+          {message.type === 'success' && <Check size={18} />}
+          {message.type === 'error' && <X size={18} />}
+          {message.text}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default App;
