@@ -38,12 +38,13 @@
 
     // Firebase 配置（需要替換為您的配置）
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyAy_S7tGi6ht_Ksd8EvjYbr3ILkIRhAU6k",
+      authDomain: "knowledge-prompt-manager.firebaseapp.com",
+      projectId: "knowledge-prompt-manager",
+      storageBucket: "knowledge-prompt-manager.firebasestorage.app",
+      messagingSenderId: "234120761290",
+      appId: "1:234120761290:web:f4c82b8187827a4f458933",
+      measurementId: "G-G1K6BNZNJK"
     };
 
     // 初始化 Firebase
@@ -300,15 +301,6 @@
                 <li>• GitHub 備份可作為額外的資料保障</li>
               </ul>
             </div>
-
-            {/* Firebase 配置狀態 */}
-            {!db && (
-              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-yellow-800 text-sm">
-                  <strong>注意：</strong>Firebase 尚未配置。請在程式碼中設定您的 Firebase 配置資訊。
-                </p>
-              </div>
-            )}
           </div>
         </div>
       );
